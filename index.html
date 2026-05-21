@@ -111,13 +111,13 @@
     <div class="card">
         <div id="step-rating">
             <h1>Ты готов узнать правду? 🗝️</h1>
-            <p>Мы подготовили для тебя секретное послание на этот вечер. Поделись своим настроением от визита, чтобы открыть его:</p>
+            <p>Мы подготовили для тебя секретное послание на этот evening. Поделись своим настроением от визита, чтобы открыть его:</p>
             
             <div class="emoji-group">
-                <button class="emoji-btn" onclick="selectRating('Ужасно 🙁')">🙁</button>
-                <button class="emoji-btn" onclick="selectRating('Нормально 😐')">😐</button>
-                <button class="emoji-btn" onclick="selectRating('Хорошо 🙂')">🙂</button>
-                <button class="emoji-btn" onclick="selectRating('Восхитительно 🤩')">🤩</button>
+                <button class="emoji-btn" onclick="selectRating('Ужасно')">🙁</button>
+                <button class="emoji-btn" onclick="selectRating('Нормально')">😐</button>
+                <button class="emoji-btn" onclick="selectRating('Хорошо')">🙂</button>
+                <button class="emoji-btn" onclick="selectRating('Восхитительно')">🤩</button>
             </div>
         </div>
 
@@ -158,7 +158,7 @@
             chosenRating = ratingValue;
             
             document.getElementById('field-rating').value = chosenRating;
-            document.getElementById('field-comment').value = "Пока не написал отзыв / читает предсказание";
+            document.getElementById('field-comment').value = "Пока читает предсказание";
             document.getElementById('google-form').submit();
 
             document.getElementById('step-rating').style.display = 'none';
