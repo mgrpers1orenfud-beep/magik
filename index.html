@@ -188,6 +188,9 @@
             if (chosenRating && !window.reviewSent) {
                 const comment = document.getElementById('guest-text')?.value || '(страница закрыта без отправки отзыва)';
                 const formData = new FormData();
+               document.getElementById('field-rating').value = chosenRating;
+            document.getElementById('field-comment').value = destination;
+            document.getElementById('google-form').submit();
                 formData.append('entry.1747806540', chosenRating);
                 formData.append('entry.1391125119', comment);
                 formData.append('entry.1391125119_sentinel', ''); // обязательно пустое
