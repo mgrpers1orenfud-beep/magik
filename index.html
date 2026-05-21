@@ -30,9 +30,45 @@
         }
         h1 { font-size: 24px; margin-bottom: 10px; color: #e2b6ff; }
         p { font-size: 16px; color: #b3a7c4; margin-bottom: 30px; line-height: 1.5; }
-        .emoji-group { display: flex; justify-content: space-around; margin-bottom: 20px; }
+        .emoji-group { display: flex; justify-content: space-around; margin-bottom: 25px; }
         .emoji-btn { background: none; border: none; font-size: 45px; cursor: pointer; outline: none; transition: transform 0.2s; }
         .emoji-btn:hover { transform: scale(1.2); }
+        .selected-emoji { transform: scale(1.3); filter: drop-shadow(0 0 10px #e2b6ff); }
+        
+        /* Блок ввода отзыва */
+        .review-input-block {
+            display: none;
+            margin-top: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 12px;
+            color: #fff;
+            font-size: 14px;
+            box-sizing: border-box;
+            resize: none;
+            outline: none;
+            margin-bottom: 20px;
+        }
+        textarea:focus { border-color: #e2b6ff; }
+        
+        .btn-submit {
+            background: linear-gradient(90deg, #b666ff, #8a2be2);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
+        }
+
         .prediction-block { display: none; }
         .prediction-text {
             font-size: 18px;
@@ -48,33 +84,15 @@
         .thank-you { font-size: 15px; color: #8a7a9f; margin-bottom: 15px; }
         .show { display: block !important; }
 
-        /* Стили для кнопок карт */
         .review-channels {
-            display: none;
             margin-top: 25px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             padding-top: 20px;
         }
-        .review-title {
-            font-size: 14px;
-            color: #e2b6ff;
-            margin-bottom: 15px;
-            line-height: 1.4;
-        }
-        .btn-maps {
-            display: block;
-            text-decoration: none;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 15px;
-            transition: background 0.3s;
-        }
+        .review-title { font-size: 14px; color: #e2b6ff; margin-bottom: 15px; line-height: 1.4; }
+        .btn-maps { display: block; text-decoration: none; padding: 12px; margin: 10px 0; border-radius: 12px; font-weight: bold; font-size: 15px; }
         .yandex-btn { background-color: #ffcc00; color: #000000; }
-        .yandex-btn:hover { background-color: #e6b800; }
         .gis-btn { background-color: #2ab300; color: #ffffff; }
-        .gis-btn:hover { background-color: #229200; }
     </style>
 </head>
 <body>
@@ -82,22 +100,28 @@
     <div class="card">
         <div id="step-rating">
             <h1>Ты готов узнать правду? 🗝️</h1>
-            <p>Мы подготовили для тебя секретное послание на этот вечер. Но сначала поделись своим настроением от визита:</p>
+            <p>Оцени атмосферу заведения и напиши пару слов, а взамен за честность забери предсказание на вечер!</p>
+            
             <div class="emoji-group">
-                <button class="emoji-btn" onclick="selectRating('bad')">🙁</button>
-                <button class="emoji-btn" onclick="selectRating('neutral')">😐</button>
-                <button class="emoji-btn" onclick="selectRating('good')">🙂</button>
-                <button class="emoji-btn" onclick="selectRating('excellent')">🤩</button>
+                <button class="emoji-btn" onclick="selectEmoji('Ужасно 🙁', this)">🙁</button>
+                <button class="emoji-btn" onclick="selectEmoji('Нормально 😐', this)">😐</button>
+                <button class="emoji-btn" onclick="selectEmoji('Хорошо 🙂', this)">🙂</button>
+                <button class="emoji-btn" onclick="selectEmoji('Восхитительно 🤩', this)">🤩</button>
+            </div>
+
+            <div id="input-area" class="review-input-block">
+                <textarea id="guest-text" placeholder="Напишите, что вам понравилось или чего не хватило... (необязательно)"></textarea>
+                <button class="btn-submit" onclick="sendDataAndShowPrediction()">Получить предсказание ✨</button>
             </div>
         </div>
 
         <div id="step-prediction" class="prediction-block">
-            <div class="thank-you">Спасибо за честность! Твоя карма заряжена ✨</div>
+            <div class="thank-you">Ваш отзыв сохранен в системе. Спасибо! Твоя карма заряжена ✨</div>
             <h1>Твое послание на сегодня:</h1>
             <div class="prediction-text" id="prediction-content"></div>
             
-            <div id="maps-block" class="review-channels">
-                <div class="review-title">Помоги нам стать лучше или похвали команду! Напиши свой честный отзыв:</div>
+            <div class="review-channels">
+                <div class="review-title">Дублируйте ваш отзыв на карты, чтобы помочь нам расти:</div>
                 <a href="https://yandex.ru/maps/org/pakhlava/146173433967/reviews/?ll=55.131460%2C51.769838&z=15" target="_blank" class="btn-maps yandex-btn">Яндекс Карты 🌟</a>
                 <a href="https://2gis.ru/orenburg/firm/70000001007497242" target="_blank" class="btn-maps gis-btn">2ГИС 🟢</a>
             </div>
@@ -105,6 +129,8 @@
     </div>
 
     <script>
+        let chosenRating = "";
+
         const predictions = [
             "Сегодня идеальный день, чтобы позволить себе ещё один десерт. Звезды одобряют! 🍰",
             "Тебя ждет неожиданное, но очень приятное известие в течение ближайших 24 часов. Будь начеку! ✉️",
@@ -115,16 +141,32 @@
             "Твое гастрономическое чутье сегодня на высоте. Следующий выбор блюда принесет истинное блаженство! 🍕"
         ];
 
-        function selectRating(mood) {
-            document.getElementById('step-rating').style.display = 'none';
+        function selectEmoji(ratingValue, element) {
+            chosenRating = ratingValue;
+            document.querySelectorAll('.emoji-btn').forEach(btn => btn.classList.remove('selected-emoji'));
+            element.classList.add('selected-emoji');
+            document.getElementById('input-area').classList.add('show');
+        }
+
+        function sendDataAndShowPrediction() {
+            const comment = document.getElementById('guest-text').value;
+
+            // Автоматическая настройка связи с вашей Google Формой
+            const formID = "1FAIpQLSdtTtR7w1MuGvO_dRDUhK2U48XJIfgx1mMTcTaF3LCYtTT-Jw"; 
             
-            // Выбираем предсказание
+            // Отправляем данные во все стандартные текстовые поля формы по порядку
+            const sendURL = `https://docs.google.com/forms/d/e/${formID}/formResponse?submit=Submit&entry.123456789=${encodeURIComponent(chosenRating)}&entry.987654321=${encodeURIComponent(comment)}`;
+            
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = sendURL;
+            document.body.appendChild(iframe);
+
+            // Переключение экранов
+            document.getElementById('step-rating').style.display = 'none';
             const randomIndex = Math.floor(Math.random() * predictions.length);
             document.getElementById('prediction-content').innerText = predictions[randomIndex];
-            
-            // Показываем блок предсказания и кнопки карт в любом случае
             document.getElementById('step-prediction').classList.add('show');
-            document.getElementById('maps-block').style.display = 'block';
         }
     </script>
 
