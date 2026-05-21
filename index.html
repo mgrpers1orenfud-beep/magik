@@ -137,20 +137,19 @@
 
     <script>
         let chosenRating = "";
-        // Ссылка на отправку ответов в вашу форму "Отзывы пахлава"
+        // Точный адрес для отправки данных в вашу форму "Отзывы пахлава"
         const formActionUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfvjUCBC27T87P_AUAHDjBenJGKOzSDl_iUtxhrXHD-4ClDdQ/formResponse";
 
         const predictions = [
             "Сегодня идеальный день, чтобы позволить себе ещё один десерт. Звезды одобряют! 🍰",
             "Тебя ждет неожиданное, но очень приятное известие в течение ближайших 24 часов. Будь начеку! ✉️",
             "Твоя энергия сегодня притягивает удачу. Доверься своей интуиции, она ведет тебя в правильном направлении. ✨",
-            "Кто-то прямо сейчас думает о тебе с теплотой и улыбкой. Скоро вы встретитесь! 🥰",
+            "Кто-то прямо сейчас думает о тебе с теплотой и улыбкой. Скоро вы встретесь! 🥰",
             "Сегодня отличный вечер, чтобы оставить все заботы за порогом и просто насладиться моментом. 🥂",
-            "Впереди крутой поворот, который принесет много радости. Главное — улымайся чаще! 🌟",
+            "Впереди крутой поворот, который принесет много радости. Главное — улыбайся чаще! 🌟",
             "Твое гастрономическое чутье сегодня на высоте. Следующий выбор блюда принесет истинное блаженство! 🍕"
         ];
 
-        // 1. Клик по смайлику — переключает на предсказание
         function selectRating(ratingValue) {
             chosenRating = ratingValue;
             
@@ -160,26 +159,24 @@
             document.getElementById('step-prediction').classList.add('show');
         }
 
-        // 2. Отправка отзыва, написанного на сайте
         function sendTextComment() {
             const comment = document.getElementById('guest-text').value || "Оставил пустой отзыв";
             
-            // Собираем прямую ссылку с точными ID полей Google
+            // Формируем прямую ссылку с точными ID полей Google формы
             const finalUrl = formActionUrl + 
-                             "?entry.1747806540=" + encodeURIComponent(chosenRating) + 
-                             "&entry.1764654516=" + encodeURIComponent(comment);
+                             "?entry.1741541300=" + encodeURIComponent(chosenRating) + 
+                             "&entry.317585250=" + encodeURIComponent(comment);
             
-            // Перенаправляем браузер гостя — данные улетят со 100% гарантией
+            // Перенаправляем браузер — данные сохраняются мгновенно
             window.location.href = finalUrl;
         }
 
-        // 3. Если гость выбрал Яндекс или 2ГИС
         function redirectToMaps(mapUrl, statusText) {
             const finalUrl = formActionUrl + 
-                             "?entry.1747806540=" + encodeURIComponent(chosenRating) + 
-                             "&entry.1764654516=" + encodeURIComponent(statusText);
+                             "?entry.1741541300=" + encodeURIComponent(chosenRating) + 
+                             "&entry.317585250=" + encodeURIComponent(statusText);
             
-            // Открываем карты в новой вкладке, а текущую страницу отправляем в Google для фиксации оценки
+            // Открываем карты, а текущую страницу переводим на регистрацию ответа в Google таблице
             window.open(mapUrl, '_blank');
             window.location.href = finalUrl;
         }
