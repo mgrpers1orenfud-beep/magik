@@ -31,7 +31,8 @@
         h1 { font-size: 24px; margin-bottom: 10px; color: #e2b6ff; }
         p { font-size: 16px; color: #b3a7c4; margin-bottom: 30px; line-height: 1.5; }
         .emoji-group { display: flex; justify-content: space-around; margin-bottom: 20px; }
-        .emoji-btn { background: none; border: none; font-size: 45px; cursor: pointer; outline: none; }
+        .emoji-btn { background: none; border: none; font-size: 45px; cursor: pointer; outline: none; transition: transform 0.2s; }
+        .emoji-btn:hover { transform: scale(1.2); }
         .prediction-block { display: none; }
         .prediction-text {
             font-size: 18px;
@@ -46,6 +47,34 @@
         }
         .thank-you { font-size: 15px; color: #8a7a9f; margin-bottom: 15px; }
         .show { display: block !important; }
+
+        /* Стили для кнопок карт */
+        .review-channels {
+            display: none;
+            margin-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+        }
+        .review-title {
+            font-size: 14px;
+            color: #e2b6ff;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .btn-maps {
+            display: block;
+            text-decoration: none;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 15px;
+            transition: background 0.3s;
+        }
+        .yandex-btn { background-color: #ffcc00; color: #000000; }
+        .yandex-btn:hover { background-color: #e6b800; }
+        .gis-btn { background-color: #2ab300; color: #ffffff; }
+        .gis-btn:hover { background-color: #229200; }
     </style>
 </head>
 <body>
@@ -55,10 +84,10 @@
             <h1>Ты готов узнать правду? 🗝️</h1>
             <p>Мы подготовили для тебя секретное послание на этот вечер. Но сначала поделись своим настроением от визита:</p>
             <div class="emoji-group">
-                <button class="emoji-btn" onclick="selectRating('🙁')">🙁</button>
-                <button class="emoji-btn" onclick="selectRating('😐')">😐</button>
-                <button class="emoji-btn" onclick="selectRating('🙂')">🙂</button>
-                <button class="emoji-btn" onclick="selectRating('🤩')">🤩</button>
+                <button class="emoji-btn" onclick="selectRating('bad')">🙁</button>
+                <button class="emoji-btn" onclick="selectRating('neutral')">😐</button>
+                <button class="emoji-btn" onclick="selectRating('good')">🙂</button>
+                <button class="emoji-btn" onclick="selectRating('excellent')">🤩</button>
             </div>
         </div>
 
@@ -66,6 +95,12 @@
             <div class="thank-you">Спасибо за честность! Твоя карма заряжена ✨</div>
             <h1>Твое послание на сегодня:</h1>
             <div class="prediction-text" id="prediction-content"></div>
+            
+            <div id="maps-block" class="review-channels">
+                <div class="review-title">Помоги нам стать лучше или похвали команду! Напиши свой честный отзыв:</div>
+                <a href="https://yandex.ru/maps/org/pakhlava/146173433967/reviews/?ll=55.131460%2C51.769838&z=15" target="_blank" class="btn-maps yandex-btn">Яндекс Карты 🌟</a>
+                <a href="https://2gis.ru/orenburg/firm/70000001007497242" target="_blank" class="btn-maps gis-btn">2ГИС 🟢</a>
+            </div>
         </div>
     </div>
 
@@ -82,9 +117,14 @@
 
         function selectRating(mood) {
             document.getElementById('step-rating').style.display = 'none';
+            
+            // Выбираем предсказание
             const randomIndex = Math.floor(Math.random() * predictions.length);
             document.getElementById('prediction-content').innerText = predictions[randomIndex];
+            
+            // Показываем блок предсказания и кнопки карт в любом случае
             document.getElementById('step-prediction').classList.add('show');
+            document.getElementById('maps-block').style.display = 'block';
         }
     </script>
 
