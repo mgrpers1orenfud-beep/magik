@@ -33,42 +33,7 @@
         .emoji-group { display: flex; justify-content: space-around; margin-bottom: 25px; }
         .emoji-btn { background: none; border: none; font-size: 45px; cursor: pointer; outline: none; transition: transform 0.2s; }
         .emoji-btn:hover { transform: scale(1.2); }
-        .selected-emoji { transform: scale(1.3); filter: drop-shadow(0 0 10px #e2b6ff); }
         
-        /* Блок ввода отзыва */
-        .review-input-block {
-            display: none;
-            margin-top: 20px;
-        }
-        textarea {
-            width: 100%;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            padding: 12px;
-            color: #fff;
-            font-size: 14px;
-            box-sizing: border-box;
-            resize: none;
-            outline: none;
-            margin-bottom: 20px;
-        }
-        textarea:focus { border-color: #e2b6ff; }
-        
-        .btn-submit {
-            background: linear-gradient(90deg, #b666ff, #8a2be2);
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
-        }
-
         .prediction-block { display: none; }
         .prediction-text {
             font-size: 18px;
@@ -78,21 +43,66 @@
             border: 1px dashed rgba(255, 215, 0, 0.3);
             border-radius: 16px;
             padding: 20px;
-            margin-top: 20px;
+            margin: 20px 0 25px 0;
             line-height: 1.6;
         }
         .thank-you { font-size: 15px; color: #8a7a9f; margin-bottom: 15px; }
         .show { display: block !important; }
 
+        /* Разделитель и блок выбора платформ */
         .review-channels {
             margin-top: 25px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             padding-top: 20px;
         }
-        .review-title { font-size: 14px; color: #e2b6ff; margin-bottom: 15px; line-height: 1.4; }
-        .btn-maps { display: block; text-decoration: none; padding: 12px; margin: 10px 0; border-radius: 12px; font-weight: bold; font-size: 15px; }
+        .review-title { font-size: 15px; color: #e2b6ff; margin-bottom: 15px; line-height: 1.4; font-weight: bold; }
+        
+        /* Кнопки карт */
+        .btn-maps { display: block; text-decoration: none; padding: 12px; margin: 10px 0; border-radius: 12px; font-weight: bold; font-size: 15px; transition: background 0.3s; }
         .yandex-btn { background-color: #ffcc00; color: #000000; }
+        .yandex-btn:hover { background-color: #e6b800; }
         .gis-btn { background-color: #2ab300; color: #ffffff; }
+        .gis-btn:hover { background-color: #229200; }
+
+        /* Внутренняя форма отзыва на сайте */
+        .site-review-form {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .site-review-form label { font-size: 13px; color: #b3a7c4; display: block; margin-bottom: 8px; text-align: center; }
+        textarea {
+            width: 100%;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 10px;
+            color: #fff;
+            font-size: 14px;
+            box-sizing: border-box;
+            resize: none;
+            outline: none;
+            margin-bottom: 10px;
+        }
+        textarea:focus { border-color: #e2b6ff; }
+        .btn-submit {
+            background: linear-gradient(90deg, #b666ff, #8a2be2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3);
+            transition: opacity 0.2s;
+        }
+        .btn-submit:hover { opacity: 0.9; }
     </style>
 </head>
 <body>
@@ -100,36 +110,38 @@
     <div class="card">
         <div id="step-rating">
             <h1>Ты готов узнать правду? 🗝️</h1>
-            <p>Оцени атмосферу заведения и напиши пару слов, а взамен за честность забери предсказание на вечер!</p>
+            <p>Мы подготовили для тебя секретное послание на этот вечер. Поделись своим настроением от визита, чтобы открыть его:</p>
             
             <div class="emoji-group">
-                <button class="emoji-btn" onclick="selectEmoji('Ужасно 🙁', this)">🙁</button>
-                <button class="emoji-btn" onclick="selectEmoji('Нормально 😐', this)">😐</button>
-                <button class="emoji-btn" onclick="selectEmoji('Хорошо 🙂', this)">🙂</button>
-                <button class="emoji-btn" onclick="selectEmoji('Восхитительно 🤩', this)">🤩</button>
-            </div>
-
-            <div id="input-area" class="review-input-block">
-                <textarea id="guest-text" placeholder="Напишите, что вам понравилось или чего не хватило... (необязательно)"></textarea>
-                <button class="btn-submit" onclick="sendDataAndShowPrediction()">Получить предсказание ✨</button>
+                <button class="emoji-btn" onclick="selectRating('Ужасно 🙁')">🙁</button>
+                <button class="emoji-btn" onclick="selectRating('Нормально 😐')">😐</button>
+                <button class="emoji-btn" onclick="selectRating('Хорошо 🙂')">🙂</button>
+                <button class="emoji-btn" onclick="selectRating('Восхитительно 🤩')">🤩</button>
             </div>
         </div>
 
         <div id="step-prediction" class="prediction-block">
-            <div class="thank-you">Ваш отзыв сохранен в системе. Спасибо! Твоя карма заряжена ✨</div>
-            <h1>Твое послание на сегодня:</h1>
+            <div class="thank-you">Твоя карма заряжена ✨ Твое послание:</div>
             <div class="prediction-text" id="prediction-content"></div>
             
             <div class="review-channels">
-                <div class="review-title">Дублируйте ваш отзыв на карты, чтобы помочь нам расти:</div>
-                <a href="https://yandex.ru/maps/org/pakhlava/146173433967/reviews/?ll=55.131460%2C51.769838&z=15" target="_blank" class="btn-maps yandex-btn">Яндекс Карты 🌟</a>
-                <a href="https://2gis.ru/orenburg/firm/70000001007497242" target="_blank" class="btn-maps gis-btn">2ГИС 🟢</a>
+                <div class="review-title">Где бы ты хотел оставить свой отзыв?</div>
+                
+                <div class="site-review-form" id="form-container">
+                    <label>📝 Вариант 1: Напиши нам прямо тут</label>
+                    <textarea id="guest-text" placeholder="Напишите, что вам понравилось или как нам стать лучше..."></textarea>
+                    <button class="btn-submit" onclick="sendTextComment()">Отправить отзыв в систему</button>
+                </div>
+
+                <a href="https://yandex.ru/maps/org/pakhlava/146173433967/reviews/?ll=55.131460%2C51.769838&z=15" target="_blank" class="btn-maps yandex-btn" onclick="sendOnlyRating()">💛 Вариант 2: Яндекс Карты</a>
+                <a href="https://2gis.ru/orenburg/firm/70000001007497242" target="_blank" class="btn-maps gis-btn" onclick="sendOnlyRating()">💚 Вариант 3: Отзыв в 2ГИС</a>
             </div>
         </div>
     </div>
 
     <script>
         let chosenRating = "";
+        const formID = "1FAIpQLSdtTtR7w1MuGvO_dRDUhK2U48XJIfgx1mMTcTaF3LCYtTT-Jw"; 
 
         const predictions = [
             "Сегодня идеальный день, чтобы позволить себе ещё один десерт. Звезды одобряют! 🍰",
@@ -141,32 +153,44 @@
             "Твое гастрономическое чутье сегодня на высоте. Следующий выбор блюда принесет истинное блаженство! 🍕"
         ];
 
-        function selectEmoji(ratingValue, element) {
+        // Когда гость кликает на смайлик (Переход на Стр 2)
+        function selectRating(ratingValue) {
             chosenRating = ratingValue;
-            document.querySelectorAll('.emoji-btn').forEach(btn => btn.classList.remove('selected-emoji'));
-            element.classList.add('selected-emoji');
-            document.getElementById('input-area').classList.add('show');
-        }
-
-        function sendDataAndShowPrediction() {
-            const comment = document.getElementById('guest-text').value;
-
-            // Автоматическая настройка связи с вашей Google Формой
-            const formID = "1FAIpQLSdtTtR7w1MuGvO_dRDUhK2U48XJIfgx1mMTcTaF3LCYtTT-Jw"; 
             
-            // Отправляем данные во все стандартные текстовые поля формы по порядку
-            const sendURL = `https://docs.google.com/forms/d/e/${formID}/formResponse?submit=Submit&entry.123456789=${encodeURIComponent(chosenRating)}&entry.987654321=${encodeURIComponent(comment)}`;
-            
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = sendURL;
-            document.body.appendChild(iframe);
-
-            // Переключение экранов
+            // Прячем первый экран
             document.getElementById('step-rating').style.display = 'none';
+            
+            // Выбираем предсказание и показываем второй экран
             const randomIndex = Math.floor(Math.random() * predictions.length);
             document.getElementById('prediction-content').innerText = predictions[randomIndex];
             document.getElementById('step-prediction').classList.add('show');
+        }
+
+        // Если гость выбрал написать отзыв прямо НА САЙТЕ
+        function sendTextComment() {
+            const comment = document.getElementById('guest-text').value;
+            
+            // Отправляем и оценку, и текст отзыва в форму
+            const sendURL = `https://docs.google.com/forms/d/e/${formID}/formResponse?submit=Submit&entry.502804369=${encodeURIComponent(chosenRating)}&entry.1802952402=${encodeURIComponent(comment)}`;
+            
+            submitToGoogle(sendURL);
+
+            // Меняем форму на красивое «Спасибо»
+            document.getElementById('form-container').innerHTML = "<div style='text-align:center; color:#ffd700; font-size:14px; padding:10px;'>✔️ Отзыв успешно сохранен в Excel! Спасибо!</div>";
+        }
+
+        // Если гость кликнул уйти на Яндекс или 2ГИС, мы все равно тихо сохраняем его оценку в таблицу
+        function sendOnlyRating() {
+            const sendURL = `https://docs.google.com/forms/d/e/${formID}/formResponse?submit=Submit&entry.502804369=${encodeURIComponent(chosenRating)}&entry.1802952402=${encodeURIComponent('Ушел оставлять отзыв на карты')}`;
+            submitToGoogle(sendURL);
+        }
+
+        // Техническая функция незаметной отправки
+        function submitToGoogle(url) {
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = url;
+            document.body.appendChild(iframe);
         }
     </script>
 
