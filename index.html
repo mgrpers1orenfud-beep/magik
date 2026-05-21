@@ -102,12 +102,6 @@
 </head>
 <body>
 
-    <iframe name="submit-target" id="submit-target" style="display:none;"></iframe>
-    <form id="google-form" action="https://docs.google.com/forms/d/e/1FAIpQLSd8D9-81k2mZ9U7p2uUo_6wX_m9vKCHw_1gVKU2uEKapNLDC1iq_gEhls6OeKU4ibkWvFmsf5BlPQ/formResponse" method="POST" target="submit-target" style="display:none;">
-        <input type="text" id="field-rating" name="entry.1741541300" value="">
-        <textarea id="field-comment" name="entry.317585250"></textarea>
-    </form>
-
     <div class="card">
         <div id="step-rating">
             <h1>Ты готов узнать правду? 🗝️</h1>
@@ -134,15 +128,17 @@
                     <button class="btn-submit" onclick="sendTextComment()">Отправить отзыв в систему</button>
                 </div>
 
-                <a href="https://yandex.ru/maps/org/pakhlava/146173433967/reviews/?ll=55.131460%2C51.769838&z=15" target="_blank" class="btn-maps yandex-btn" onclick="sendOnlyRating('Ушел в Яндекс Карты')">💛 Вариант 2: Яндекс Карты</a>
+                <button class="btn-maps yandex-btn" style="width:100%; border:none; cursor:pointer;" onclick="redirectToMaps('https://yandex.ru/maps/org/pakhlava/146173433967/reviews/?ll=55.131460%2C51.769838&z=15', 'Ушел в Яндекс Карты')">💛 Вариант 2: Яндекс Карты</button>
                 
-                <a href="https://2gis.ru/orenburg/firm/70000001007497242" target="_blank" class="btn-maps gis-btn" onclick="sendOnlyRating('Ушел в 2ГИС')">💚 Вариант 3: Отзыв в 2ГИС</a>
+                <button class="btn-maps gis-btn" style="width:100%; border:none; cursor:pointer;" onclick="redirectToMaps('https://2gis.ru/orenburg/firm/70000001007497242', 'Ушел в 2ГИС')">💚 Вариант 3: Отзыв в 2ГИС</button>
             </div>
         </div>
     </div>
 
     <script>
         let chosenRating = "";
+        // Базовая ссылка на вашу форму "Отзывы пахлава"
+        const formBaseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfvjUCBC27T87P_AUAHDjBenJGKOzSDl_iUtxhrXHD-4ClDdQ/formResponse";
 
         const predictions = [
             "Сегодня идеальный день, чтобы позволить себе ещё один десерт. Звезды одобряют! 🍰",
@@ -154,34 +150,34 @@
             "Твое гастрономическое чутье сегодня на высоте. Следующий выбор блюда принесет истинное блаженство! 🍕"
         ];
 
+        // 1. Клик по смайлику — просто открывает предсказание
         function selectRating(ratingValue) {
             chosenRating = ratingValue;
             
-            document.getElementById('field-rating').value = chosenRating;
-            document.getElementById('field-comment').value = "Пока не написал отзыв / читает предсказание";
-            document.getElementById('google-form').submit();
-
-            // ИСПРАВЛЕНО: убрали дублирующее слово style
             document.getElementById('step-rating').style.display = 'none';
             const randomIndex = Math.floor(Math.random() * predictions.length);
             document.getElementById('prediction-content').innerText = predictions[randomIndex];
             document.getElementById('step-prediction').classList.add('show');
         }
 
+        // 2. Отправка текстового комментария (перенаправление в Google)
         function sendTextComment() {
-            const comment = document.getElementById('guest-text').value;
+            const comment = document.getElementById('guest-text').value || "Без текстового комментария";
             
-            document.getElementById('field-rating').value = chosenRating;
-            document.getElementById('field-comment').value = comment;
-            document.getElementById('google-form').submit();
-
-            document.getElementById('form-container').innerHTML = "<div style='text-align:center; color:#ffd700; font-size:14px; padding:10px; font-weight:bold;'>✔️ Отзыв успешно сохранен! Спасибо!</div>";
+            // Собираем прямую ссылку с параметрами
+            const finalUrl = `${formBaseUrl}?entry.1747806540=${encodeURIComponent(chosenRating)}&entry.1764654516=${encodeURIComponent(comment)}`;
+            
+            // Перенаправляем пользователя (форма заполнится и отправится сама)
+            window.location.href = finalUrl;
         }
 
-        function sendOnlyRating(destination) {
-            document.getElementById('field-rating').value = chosenRating;
-            document.getElementById('field-comment').value = destination;
-            document.getElementById('google-form').submit();
+        // 3. Переход на карты (перенаправление в Google в фоновом режиме / новой вкладке)
+        function redirectToMaps(mapUrl, statusText) {
+            const finalUrl = `${formBaseUrl}?entry.1747806540=${encodeURIComponent(chosenRating)}&entry.1764654516=${encodeURIComponent(statusText)}`;
+            
+            // Открываем карты в новом окне, а текущую страницу переводим на регистрацию ответа в Google
+            window.open(mapUrl, '_blank');
+            window.location.href = finalUrl;
         }
     </script>
 
