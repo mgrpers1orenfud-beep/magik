@@ -103,9 +103,9 @@
 <body>
 
     <iframe name="submit-target" id="submit-target" style="display:none;"></iframe>
-    <form id="google-form" action="https://docs.google.com/forms/d/e/1FAIpQLSfvjUCBC27T87P_AUAHDjBenJGKOzSDl_iUtxhrXHD-4ClDdQ/formResponse" method="POST" target="submit-target" style="display:none;">
-        <input type="text" id="field-rating" name="entry.1747806540" value="">
-        <textarea id="field-comment" name="entry.1764654516"></textarea>
+    <form id="google-form" action="https://docs.google.com/forms/d/e/1FAIpQLSd8D9-81k2mZ9U7p2uUo_6wX_m9vKCHw_1gVKU2uEKapNLDC1iq_gEhls6OeKU4ibkWvFmsf5BlPQ/formResponse" method="POST" target="submit-target" style="display:none;">
+        <input type="text" id="field-rating" name="entry.1741541300" value="">
+        <textarea id="field-comment" name="entry.317585250"></textarea>
     </form>
 
     <div class="card">
@@ -154,7 +154,6 @@
             "Твое гастрономическое чутье сегодня на высоте. Следующий выбор блюда принесет истинное блаженство! 🍕"
         ];
 
-        // 1. Нажатие на смайлик — мгновенная отправка оценки в таблицу
         function selectRating(ratingValue) {
             chosenRating = ratingValue;
             
@@ -162,14 +161,12 @@
             document.getElementById('field-comment').value = "Пока не написал отзыв / читает предсказание";
             document.getElementById('google-form').submit();
 
-            // Переключение на блок с предсказанием
             document.getElementById('step-rating').style.display = 'none';
             const randomIndex = Math.floor(Math.random() * predictions.length);
             document.getElementById('prediction-content').innerText = predictions[randomIndex];
             document.getElementById('step-prediction').classList.add('show');
         }
 
-        // 2. Отправка текста отзыва прямо с сайта
         function sendTextComment() {
             const comment = document.getElementById('guest-text').value;
             
@@ -177,10 +174,9 @@
             document.getElementById('field-comment').value = comment;
             document.getElementById('google-form').submit();
 
-            document.getElementById('form-container').innerHTML = "<div style='text-align:center; color:#ffd700; font-size:14px; padding:10px; font-weight:bold;'>✔️ Отзыв успешно сохранен в Excel! Спасибо!</div>";
+            document.getElementById('form-container').innerHTML = "<div style='text-align:center; color:#ffd700; font-size:14px; padding:10px; font-weight:bold;'>✔️ Отзыв успешно сохранен! Спасибо!</div>";
         }
 
-        // 3. Клики по переходу на сторонние карты
         function sendOnlyRating(destination) {
             document.getElementById('field-rating').value = chosenRating;
             document.getElementById('field-comment').value = destination;
