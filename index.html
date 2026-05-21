@@ -2,38 +2,18 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Отзывы</title>
+    <title>Оставьте отзыв</title>
     <style>
         body { font-family: sans-serif; background: #1e112a; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .card { background: rgba(255, 255, 255, 0.05); padding: 30px; border-radius: 20px; width: 300px; text-align: center; }
-        button { display: block; width: 100%; padding: 15px; margin: 10px 0; border-radius: 10px; border: none; cursor: pointer; font-size: 16px; background: #e2b6ff; color: #000; }
-        textarea { width: 100%; height: 80px; margin: 10px 0; border-radius: 10px; padding: 10px; box-sizing: border-box; }
+        .card { background: rgba(255, 255, 255, 0.05); padding: 40px; border-radius: 20px; width: 300px; text-align: center; }
+        a { display: block; padding: 20px; margin-top: 20px; background: #e2b6ff; color: #000; text-decoration: none; border-radius: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
-
-    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
-    <form id="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSfvjUCBC27T87P_AUAHDjBenJGKOzSDl_iUtxhrXHD-4ClDdQ/formResponse" method="POST" target="hidden_iframe">
-        <div class="card" id="step1">
-            <h3>Оцените нас</h3>
-            <button name="entry.1747806540" value="Ужасно" onclick="nextStep()">Ужасно</button>
-            <button name="entry.1747806540" value="Нормально" onclick="nextStep()">Нормально</button>
-            <button name="entry.1747806540" value="Хорошо" onclick="nextStep()">Хорошо</button>
-            <button name="entry.1747806540" value="Восхитительно" onclick="nextStep()">Восхитительно</button>
-        </div>
-        
-        <div class="card" id="step2" style="display:none;">
-            <h3>Ваш отзыв</h3>
-            <textarea name="entry.1764654516" placeholder="Напишите пару слов..."></textarea>
-            <button type="submit">Отправить</button>
-        </div>
-    </form>
-
-    <script>
-        function nextStep() {
-            document.getElementById('step1').style.display = 'none';
-            document.getElementById('step2').style.display = 'block';
-        }
-    </script>
+    <div class="card">
+        <h2>Поделитесь мнением</h2>
+        <p>Ваш отзыв очень важен для нас!</p>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfvjUCBC27T87P_AUAHDjBenJGKOzSDl_iUtxhrXHD-4ClDdQ/viewform" target="_blank">Перейти к заполнению</a>
+    </div>
 </body>
 </html>
