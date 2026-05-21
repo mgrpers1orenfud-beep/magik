@@ -1,31 +1,90 @@
-</div>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Только для твоих глаз 🔮</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: linear-gradient(135deg, #1e112a 0%, #0f081d 100%);
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px 30px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+        h1 { font-size: 24px; margin-bottom: 10px; color: #e2b6ff; }
+        p { font-size: 16px; color: #b3a7c4; margin-bottom: 30px; line-height: 1.5; }
+        .emoji-group { display: flex; justify-content: space-around; margin-bottom: 20px; }
+        .emoji-btn { background: none; border: none; font-size: 45px; cursor: pointer; outline: none; }
+        .prediction-block { display: none; }
+        .prediction-text {
+            font-size: 18px;
+            font-style: italic;
+            color: #ffd700;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px dashed rgba(255, 215, 0, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 20px;
+            line-height: 1.6;
+        }
+        .thank-you { font-size: 15px; color: #8a7a9f; margin-bottom: 15px; }
+        .show { display: block !important; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div id="step-rating">
+            <h1>Ты готов узнать правду? 🗝️</h1>
+            <p>Мы подготовили для тебя секретное послание на этот вечер. Но сначала поделись своим настроением от визита:</p>
+            <div class="emoji-group">
+                <button class="emoji-btn" onclick="selectRating('🙁')">🙁</button>
+                <button class="emoji-btn" onclick="selectRating('😐')">😐</button>
+                <button class="emoji-btn" onclick="selectRating('🙂')">🙂</button>
+                <button class="emoji-btn" onclick="selectRating('🤩')">🤩</button>
+            </div>
+        </div>
+
+        <div id="step-prediction" class="prediction-block">
+            <div class="thank-you">Спасибо за честность! Твоя карма заряжена ✨</div>
+            <h1>Твое послание на сегодня:</h1>
+            <div class="prediction-text" id="prediction-content"></div>
+        </div>
+    </div>
 
     <script>
-        // База душевных и интригующих предсказаний
         const predictions = [
             "Сегодня идеальный день, чтобы позволить себе ещё один десерт. Звезды одобряют! 🍰",
             "Тебя ждет неожиданное, но очень приятное известие в течение ближайших 24 часов. Будь начеку! ✉️",
             "Твоя энергия сегодня притягивает удачу. Доверься своей интуиции, она ведет тебя в правильном направлении. ✨",
             "Кто-то прямо сейчас думает о тебе с теплотой и улыбкой. Скоро вы встретитесь! 🥰",
             "Сегодня отличный вечер, чтобы оставить все заботы за порогом и просто насладиться моментом. 🥂",
-            "Впереди крутой поворот, который принесет много радости. Главное — улыбайся чаще! 🌟",
+            "Впереди крутой поворот, который принесет много радости. Главное — улымайся чаще! 🌟",
             "Твое гастрономическое чутье сегодня на высоте. Следующий выбор блюда принесет истинное блаженство! 🍕"
         ];
 
         function selectRating(mood) {
-            // Здесь в будущем можно настроить отправку данных в CRM или Telegram:
-            console.log("Гость оставил оценку: " + mood);
-
-            // Скрываем первый шаг
             document.getElementById('step-rating').style.display = 'none';
-
-            // Выбираем случайное предсказание из списка
             const randomIndex = Math.floor(Math.random() * predictions.length);
             document.getElementById('prediction-content').innerText = predictions[randomIndex];
-
-            // Плавно показываем блок предсказания
-            const predictionBlock = document.getElementById('step-prediction');
-            predictionBlock.classList.add('show');
+            document.getElementById('step-prediction').classList.add('show');
         }
     </script>
 
