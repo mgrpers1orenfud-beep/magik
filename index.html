@@ -181,25 +181,7 @@
             document.getElementById('field-rating').value = chosenRating;
             document.getElementById('field-comment').value = destination;
             document.getElementById('google-form').submit();
-            window.reviewSent = true; // при переходе по внешней ссылке тоже считаем, что данные ушли
         }
-        // Автоматическая отправка при закрытии страницы, если не было нажата кнопка "Отправить"
-        window.addEventListener('beforeunload', function() {
-            if (chosenRating && !window.reviewSent) {
-                const comment = document.getElementById('guest-text')?.value || '(страница закрыта без отправки отзыва)';
-                const formData = new FormData();
-               document.getElementById('field-rating').value = chosenRating;
-            document.getElementById('field-comment').value = destination;
-            document.getElementById('google-form').submit();
-                formData.append('entry.1391125119', chosenRating);
-                formData.append('entry.2025211259', comment);
-                formData.append('entry.2025211259_sentinel', ''); // обязательно пустое
-                navigator.sendBeacon(
-                    'https://docs.google.com/forms/u/0/d/e/1FAIpQLSfvjUCBC27T87P_AUAHDjBenJGKOzSDl_iUtxhrXHD-4ClDdQ/formResponse',
-                    formData
-                );
-            }
-        });
     </script>
 
 </body>
