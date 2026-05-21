@@ -103,9 +103,9 @@
 <body>
 
     <iframe name="submit-target" id="submit-target" style="display:none;"></iframe>
-    <form id="google-form" action="https://docs.google.com/forms/d/e/1FAIpQLSd8D9-81k2mZ9U7p2uUo_6wX_m9vKCHw_1gVKU2uEKapNLDC1iq_gEhls6OeKU4ibkWvFmsf5BlPQ/formResponse" method="POST" target="submit-target" style="display:none;">
-        <input type="text" id="field-rating" name="entry.1741541300" value="">
-        <textarea id="field-comment" name="entry.317585250"></textarea>
+    <form id="google-form" action="https://docs.google.com/forms/d/e/1FAIpQLSfvjUCBC27T87P_AUAHDjBenJGKOzSDl_iUtxhrXHD-4ClDdQ/formResponse" method="POST" target="submit-target" style="display:none;">
+        <input type="text" id="field-rating" name="entry.1747806540" value="">
+        <textarea id="field-comment" name="entry.1764654516"></textarea>
     </form>
 
     <div class="card">
@@ -145,13 +145,13 @@
         let chosenRating = "";
 
         const predictions = [
-            "Сегодня идеальный день, чтобы позволить себе ещё один десерт. Звезды одобряют! 🍰",
-            "Тебя ждет неожиданное, но очень приятное известие в течение ближайших 24 часов. Будь начеку! ✉️",
-            "Твоя энергия сегодня притягивает удачу. Доверься своей интуиции, она ведет тебя в правильном направлении. ✨",
-            "Кто-то прямо сейчас думает о тебе с теплотой и улыбкой. Скоро вы встретитесь! 🥰",
-            "Сегодня отличный вечер, чтобы оставить все заботы за порогом и просто насладиться моментом. 🥂",
-            "Впереди крутой поворот, который принесет много радости. Главное — улымайся чаще! 🌟",
-            "Твое гастрономическое чутье сегодня на высоте. Следующий выбор блюда принесет истинное блаженство! 🍕"
+            "Today is the perfect day to treat yourself to another dessert. The stars approve! 🍰",
+            "An unexpected but very pleasant piece of news awaits you within the next 24 hours. Stay tuned! ✉️",
+            "Your energy today is attracting good luck. Trust your intuition, it is leading you in the right direction. ✨",
+            "Someone is thinking of you with warmth and a smile right now. You will meet soon! 🥰",
+            "Tonight is a great evening to leave all your worries at the door and just enjoy the moment. 🥂",
+            "A big turn is ahead that will bring a lot of joy. Most importantly — smile more often! 🌟",
+            "Your culinary instinct is at its peak today. The next choice of dish will bring true bliss! 🍕"
         ];
 
         function selectRating(ratingValue) {
@@ -161,7 +161,7 @@
             document.getElementById('field-comment').value = "Пока не написал отзыв / читает предсказание";
             document.getElementById('google-form').submit();
 
-            document.getElementById('step-rating').style.display = 'none';
+            document.getElementById('step-rating').style.style.display = 'none';
             const randomIndex = Math.floor(Math.random() * predictions.length);
             document.getElementById('prediction-content').innerText = predictions[randomIndex];
             document.getElementById('step-prediction').classList.add('show');
