@@ -191,9 +191,9 @@
                document.getElementById('field-rating').value = chosenRating;
             document.getElementById('field-comment').value = destination;
             document.getElementById('google-form').submit();
-                formData.append('entry.1747806540', chosenRating);
-                formData.append('entry.1391125119', comment);
-                formData.append('entry.1391125119_sentinel', ''); // обязательно пустое
+                formData.append('entry.1391125119', chosenRating);
+                formData.append('entry.2025211259', comment);
+                formData.append('entry.2025211259_sentinel', ''); // обязательно пустое
                 navigator.sendBeacon(
                     'https://docs.google.com/forms/u/0/d/e/1FAIpQLSfvjUCBC27T87P_AUAHDjBenJGKOzSDl_iUtxhrXHD-4ClDdQ/formResponse',
                     formData
