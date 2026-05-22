@@ -127,8 +127,11 @@
 </head>
 <body>
 
-    <!-- Скрытый iframe для отправки форм без перезагрузки страницы -->
     <iframe name="hidden-submit" id="hidden-submit" style="display:none;"></iframe>
+    <form id="google-form" action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSfvjUCBC27T87P_AUAHDjBenJGKOzSDl_iUtxhrXHD-4ClDdQ/formResponse" method="POST" target="hidden-submit" style="display:none;">
+        <input type="text" id="field-rating" name="entry.1391125119" value="">
+        <textarea id="field-comment" name="entry.2025211259"></textarea>
+    </form>
 
     <div class="card">
         <div id="step-rating">
@@ -148,19 +151,19 @@
             <div class="prediction-text" id="prediction-content"></div>
             
             <div class="review-channels">
-                <div class="review-title">Оставьте ваш отзыв, мы будем рады любому 💫</div>
+                <div class="review-title">Оставьте ваш отзыв , мы будем рады любому </div>
                 
-                <!-- Форма отзыва на сайте (показывается только для Ужасно и Нормально) -->
+                <!-- Форма для отзыва на сайте (показывается при Ужасно или Нормально) -->
                 <div class="site-review-form" id="form-container">
-                    <label>📝 Напишите, что вам не понравилось, или предложения:</label>
-                    <textarea id="guest-text" placeholder="Расскажите честно, что вам не понравилось, как нам стать лучше..."></textarea>
+                    <label>📝 : Расскажите нам , что вам не понравилось ? </label>
+                    <textarea id="guest-text" placeholder="Напишите честно, что вам понравилось или не понравилось , как нам стать лучше..."></textarea>
                     <button class="btn-submit" onclick="sendTextComment()">Отправить отзыв в систему</button>
                 </div>
 
-                <!-- Ссылки на карты (видны всегда) -->
-                <a href="https://yandex.ru/maps/org/pakhlava/146173433967/reviews/?ll=55.131460%2C51.769838&z=15" target="_blank" class="btn-maps yandex-btn">💛 Вариант 2: Яндекс Карты</a>
+                <!-- Ссылки на карты (показываются только при Хорошо или Восхитительно) -->
+                <a href="https://yandex.ru/maps/org/pakhlava/146173433967/reviews/?ll=55.131460%2C51.769838&z=15" target="_blank" class="btn-maps yandex-btn" onclick="sendOnlyRating('Ушел в Яндекс Карты')">💛 Вариант 2: Яндекс Карты</a>
                 
-                <a href="https://2gis.ru/orenburg/firm/70000001007497242" target="_blank" class="btn-maps gis-btn">💚 Вариант 3: Отзыв в 2ГИС</a>
+                <a href="https://2gis.ru/orenburg/firm/70000001007497242" target="_blank" class="btn-maps gis-btn" onclick="sendOnlyRating('Ушел в 2ГИС')">💚 Вариант 3: Отзыв в 2ГИС</a>
             </div>
 
             <!-- Блок с телефоном (показывается только при Ужасно или Нормально) -->
@@ -172,47 +175,7 @@
     </div>
 
     <script>
-        let chosenRating = "";      // выбранная оценка
-        let ratingSent = false;     // была ли отправлена оценка сразу при выборе смайлика
-        let reviewSent = false;     // был ли отправлен отзыв через кнопку
-
-        // Базовый URL Google Forms
-        const FORM_URL = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfvjUCBC27T87P_AUAHDjBenJGKOzSDl_iUtxhrXHD-4ClDdQ/formResponse";
-        
-        // Поля формы
-        const FIELD_RATING = "entry.1391125119";
-        const FIELD_COMMENT = "entry.2025211259";
-
-        // Функция отправки данных в Google Forms (через iframe, без перезагрузки)
-        function submitToGoogleForm(rating, comment) {
-            // Создаём временную форму
-            const tempForm = document.createElement('form');
-            tempForm.method = "POST";
-            tempForm.action = FORM_URL;
-            tempForm.target = "hidden-submit"; // отправляем в скрытый iframe
-            tempForm.style.display = "none";
-            
-            // Поле для оценки
-            const ratingInput = document.createElement('input');
-            ratingInput.type = "text";
-            ratingInput.name = FIELD_RATING;
-            ratingInput.value = rating;
-            tempForm.appendChild(ratingInput);
-            
-            // Поле для комментария
-            const commentInput = document.createElement('input');
-            commentInput.type = "text";
-            commentInput.name = FIELD_COMMENT;
-            commentInput.value = comment;
-            tempForm.appendChild(commentInput);
-            
-            document.body.appendChild(tempForm);
-            tempForm.submit();
-            // Удаляем форму после отправки (небольшая задержка, чтобы запрос успел уйти)
-            setTimeout(() => {
-                document.body.removeChild(tempForm);
-            }, 100);
-        }
+        let chosenRating = "";
 
         const predictions = [
             "Сегодня идеальный день, чтобы позволить себе ещё один десерт. Звезды одобряют! 🍰",
@@ -220,66 +183,74 @@
             "Твоя энергия сегодня притягивает удачу. Доверься своей интуиции, она ведет тебя в правильном направлении. ✨",
             "Кто-то прямо сейчас думает о тебе с теплотой и улыбкой. Скоро вы встретитесь! 🥰",
             "Сегодня отличный вечер, чтобы оставить все заботы за порогом и просто насладиться моментом. 🥂",
-            "Впереди крутой поворот, который принесет много радости. Главное — улыбайся чаще! 🌟",
+            "Впереди крутой поворот, который принесет много радости. Главное — улымайся чаще! 🌟",
             "Твое гастрономическое чутье сегодня на высоте. Следующий выбор блюда принесет истинное блаженство! 🍕"
         ];
 
-        function selectRating(ratingValue) {
+       function selectRating(ratingValue) {
             chosenRating = ratingValue;
             
-            // 1. Мгновенная отправка оценки с пустым комментарием (гарантированно)
-            submitToGoogleForm(chosenRating, "");
-            ratingSent = true;
-            
-            // 2. Показываем предсказание
+            document.getElementById('field-rating').value = chosenRating;
+            document.getElementById('field-comment').value = "Пока читает предсказание";
+            // Отправка формы закомментирована (как было в исходнике)
+            // document.getElementById('google-form').submit();
+
+            document.getElementById('step-rating').style.display = 'none';
             const randomIndex = Math.floor(Math.random() * predictions.length);
             document.getElementById('prediction-content').innerText = predictions[randomIndex];
+            document.getElementById('step-prediction').classList.add('show'); 
             
-            // 3. Скрываем первый экран, показываем блок предсказания
-            document.getElementById('step-rating').style.display = 'none';
-            document.getElementById('step-prediction').classList.add('show');
-            
-            // 4. Управление видимостью формы отзыва на сайте и телефона
-            const formBlock = document.getElementById('form-container');
-            const phoneBlock = document.getElementById('negative-contact');
-            
-            if (ratingValue === 'Ужасно' || ratingValue === 'Нормально') {
-                // Для негативных оценок: показываем форму отзыва на сайте и телефон
-                if (formBlock) formBlock.style.display = 'block';
-                if (phoneBlock) phoneBlock.style.display = 'block';
-            } else {
-                // Для положительных (Хорошо, Восхитительно): скрываем форму отзыва на сайте и телефон
-                if (formBlock) formBlock.style.display = 'none';
-                if (phoneBlock) phoneBlock.style.display = 'none';
-            }
-            
-            // Ссылки на Яндекс и 2ГИС всегда видны
+            // --- ИЗМЕНЁННАЯ ЛОГИКА ВИДИМОСТИ БЛОКОВ ---
+            const formBlock = document.querySelector('.site-review-form'); // форма на сайте
             const yandexLink = document.querySelector('.yandex-btn');
             const gisLink = document.querySelector('.gis-btn');
-            if (yandexLink) yandexLink.style.display = 'block';
-            if (gisLink) gisLink.style.display = 'block';
-        }
+            const phoneBlock = document.getElementById('negative-contact');
+            
+            // Ужасно или Нормально -> только отзыв на сайте + телефон
+            if (ratingValue === 'Ужасно' || ratingValue === 'Нормально') {
+                if (formBlock) formBlock.style.display = 'block';
+                if (yandexLink) yandexLink.style.display = 'none';
+                if (gisLink) gisLink.style.display = 'none';
+                if (phoneBlock) phoneBlock.style.display = 'block';
+            } 
+            // Хорошо или Восхитительно -> только ссылки на карты
+            else {
+                if (formBlock) formBlock.style.display = 'none';
+                if (yandexLink) yandexLink.style.display = 'block';
+                if (gisLink) gisLink.style.display = 'block';
+                if (phoneBlock) phoneBlock.style.display = 'none';
+            }
+        } 
 
-        // Отправка отзыва с текстом (вызывается только если форма видна)
         function sendTextComment() {
-            if (!chosenRating) return;
+            const comment = document.getElementById('guest-text').value || "Оставил пустой отзыв";
             
-            const comment = document.getElementById('guest-text').value; // может быть пустой строкой
-            
-            // Отправляем вторую запись с той же оценкой и введённым комментарием
-            submitToGoogleForm(chosenRating, comment);
-            reviewSent = true;
-            
-            // Заменяем содержимое формы на сообщение об успехе
-            const container = document.getElementById('form-container');
-            container.innerHTML = "<div style='text-align:center; color:#ffd700; font-size:14px; padding:10px; font-weight:bold;'>✔️ Отзыв успешно сохранен! Спасибо!</div>";
+            document.getElementById('field-rating').value = chosenRating;
+            document.getElementById('field-comment').value = comment;
+            document.getElementById('google-form').submit();
+
+            document.getElementById('form-container').innerHTML = "<div style='text-align:center; color:#ffd700; font-size:14px; padding:10px; font-weight:bold;'>✔️ Отзыв успешно сохранен! Спасибо!</div>";
         }
 
-        // Страховка: если по какой-то причине оценка не отправилась при клике (например, ошибка в скрипте),
-        // при закрытии страницы отправим пустой комментарий. Но обычно selectRating отрабатывает сразу.
+        function sendOnlyRating(destination) {
+            document.getElementById('field-rating').value = chosenRating;
+            document.getElementById('field-comment').value = destination;
+            document.getElementById('google-form').submit();
+            window.reviewSent = true;
+        }
+
+        // Автоматическая отправка при закрытии страницы, если не было нажата кнопка "Отправить"
         window.addEventListener('beforeunload', function() {
-            if (chosenRating && !ratingSent && !reviewSent) {
-                submitToGoogleForm(chosenRating, "");
+            if (chosenRating && !window.reviewSent) {
+                const comment = document.getElementById('guest-text')?.value || '(страница закрыта без отправки отзыва)';
+                const formData = new FormData();
+                formData.append('entry.1747806540', chosenRating);
+                formData.append('entry.1391125119', comment);
+                formData.append('entry.1391125119_sentinel', '');
+                navigator.sendBeacon(
+                    'https://docs.google.com/forms/u/0/d/e/1FAIpQLSfvjUCBC27T87P_AUAHDjBenJGKOzSDl_iUtxhrXHD-4ClDdQ/formResponse',
+                    formData
+                );
             }
         });
     </script>
