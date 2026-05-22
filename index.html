@@ -127,7 +127,7 @@
 </head>
 <body>
 
-    <!-- Скрытый iframe для отправки форм без перезагрузки -->
+    <!-- Скрытый iframe для отправки форм без перезагрузки (для текстовых отзывов) -->
     <iframe name="hidden-submit" id="hidden-submit" style="display:none;"></iframe>
 
     <div class="card">
@@ -158,7 +158,7 @@
                 </div>
 
                 <!-- Ссылки на карты (только для Хорошо и Восхитительно) -->
-                <a href="https://yandex.ru/maps/org/pakhlava/146173433967/?ll=55.131460%2C51.769838&z=1https://yandex.ru/maps/org/pakhlava/146173433967/?ll=55.131460%2C51.769838&z=15" target="_blank" class="btn-maps yandex-btn" id="yandex-link">💛 Вариант 2: Яндекс Карты</a>
+                <a href="https://yandex.ru/maps/org/pakhlava/146173433967/reviews/?ll=55.131460%2C51.769838&z=15" target="_blank" class="btn-maps yandex-btn" id="yandex-link">💛 Вариант 2: Яндекс Карты</a>
                 
                 <a href="https://2gis.ru/orenburg/firm/70000001007497242" target="_blank" class="btn-maps gis-btn" id="gis-link">💚 Вариант 3: Отзыв в 2ГИС</a>
             </div>
@@ -181,7 +181,7 @@
         const FIELD_RATING = "entry.1391125119";
         const FIELD_COMMENT = "entry.2025211259";
 
-        // Универсальная отправка данных в Google Forms через iframe
+        // Универсальная отправка данных в Google Forms через iframe (для текстовых отзывов)
         function submitToGoogleForm(rating, comment) {
             const tempForm = document.createElement('form');
             tempForm.method = "POST";
@@ -206,6 +206,14 @@
             setTimeout(() => {
                 document.body.removeChild(tempForm);
             }, 200);
+        }
+
+        // Отправка через sendBeacon для переходов по ссылкам (не блокирует навигацию)
+        function sendBeaconData(rating, comment) {
+            const formData = new FormData();
+            formData.append(FIELD_RATING, rating);
+            formData.append(FIELD_COMMENT, comment);
+            navigator.sendBeacon(FORM_URL, formData);
         }
 
         const predictions = [
@@ -267,46 +275,34 @@
             container.innerHTML = "<div style='text-align:center; color:#ffd700; font-size:14px; padding:10px; font-weight:bold;'>✔️ Отзыв успешно сохранен! Спасибо!</div>";
         }
 
-        // Обработчик для ссылок на карты (только для положительных оценок)
-        function onMapClick(event, destination) {
-            if (!chosenRating) return true;
-            // Предотвращаем немедленный переход, чтобы отправить данные
-            event.preventDefault();
-            
-            // Отправляем в таблицу оценку + комментарий о переходе
-            let comment = "";
-            if (destination === 'yandex') comment = "Перешел в Яндекс Карты";
-            else if (destination === 'gis') comment = "Перешел в 2ГИС";
-            
-            submitToGoogleForm(chosenRating, comment);
+        // Обработчик для ссылок на карты: отправляем данные через sendBeacon (не блокирует переход)
+        function onMapClick(destination) {
+            if (!chosenRating) return;
+            let comment = (destination === 'yandex') ? "Перешел в Яндекс Карты" : "Перешел в 2ГИС";
+            sendBeaconData(chosenRating, comment);
             additionalActionSent = true;
-            
-            // Небольшая задержка, чтобы запрос точно ушёл, затем переходим по ссылке
-            setTimeout(() => {
-                window.open(event.currentTarget.href, '_blank');
-            }, 300);
         }
 
-        // Навешиваем обработчики на ссылки (чтобы не ломать onclick в HTML)
+        // Навешиваем обработчики на ссылки (без preventDefault, чтобы переход работал)
         document.addEventListener('DOMContentLoaded', function() {
             const yandexLink = document.getElementById('yandex-link');
             const gisLink = document.getElementById('gis-link');
             if (yandexLink) {
-                yandexLink.addEventListener('click', function(e) {
-                    onMapClick(e, 'yandex');
+                yandexLink.addEventListener('click', function() {
+                    onMapClick('yandex');
                 });
             }
             if (gisLink) {
-                gisLink.addEventListener('click', function(e) {
-                    onMapClick(e, 'gis');
+                gisLink.addEventListener('click', function() {
+                    onMapClick('gis');
                 });
             }
         });
 
-        // Страховка на случай, если пользователь закрыл страницу, не отправив оценку (но selectRating срабатывает сразу)
+        // Страховка на случай, если пользователь закрыл страницу, не отправив оценку (хотя selectRating срабатывает сразу)
         window.addEventListener('beforeunload', function() {
             if (chosenRating && !ratingSent && !additionalActionSent) {
-                submitToGoogleForm(chosenRating, "");
+                sendBeaconData(chosenRating, "");
             }
         });
     </script>
