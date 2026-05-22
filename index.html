@@ -98,6 +98,31 @@
             width: 100%;
             box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3);
         }
+
+        /* Блок с телефоном для негативного отзыва (показывается только при выборе "Ужасно") */
+        #negative-contact {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 80, 80, 0.1);
+            border-radius: 16px;
+            border-left: 4px solid #ff5555;
+            text-align: left;
+        }
+        #negative-contact p {
+            margin: 0;
+            font-size: 15px;
+            color: #ffaaaa;
+        }
+        #negative-contact a {
+            color: #ffd966;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        #negative-contact a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -128,15 +153,23 @@
             <div class="review-channels">
                 <div class="review-title">Где бы ты хотел оставить свой отзыв?</div>
                 
+                <!-- Форма для отзыва на сайте (показывается при негативе) -->
                 <div class="site-review-form" id="form-container">
                     <label>📝 Вариант 1: Написать нам прямо тут</label>
                     <textarea id="guest-text" placeholder="Напишите честно, что вам понравилось или как нам стать лучше..."></textarea>
                     <button class="btn-submit" onclick="sendTextComment()">Отправить отзыв в систему</button>
                 </div>
 
+                <!-- Ссылки на карты (показываются при позитиве) -->
                 <a href="https://yandex.ru/maps/org/pakhlava/146173433967/reviews/?ll=55.131460%2C51.769838&z=15" target="_blank" class="btn-maps yandex-btn" onclick="sendOnlyRating('Ушел в Яндекс Карты')">💛 Вариант 2: Яндекс Карты</a>
                 
                 <a href="https://2gis.ru/orenburg/firm/70000001007497242" target="_blank" class="btn-maps gis-btn" onclick="sendOnlyRating('Ушел в 2ГИС')">💚 Вариант 3: Отзыв в 2ГИС</a>
+            </div>
+
+            <!-- Блок с телефоном (показывается только при выборе "Ужасно") -->
+            <div id="negative-contact">
+                <p>🙏 Нам жаль, что ваш опыт был негативным. Пожалуйста, свяжитесь с нами, мы хотим исправить ситуацию:</p>
+                <p><a href="tel:+79123456789">📞 +7 (912) 345-67-89</a></p>
             </div>
         </div>
     </div>
@@ -159,12 +192,33 @@
             
             document.getElementById('field-rating').value = chosenRating;
             document.getElementById('field-comment').value = "Пока читает предсказание";
-        <!--    document.getElementById('google-form').submit(); -->
+            // Отправка формы закомментирована (как было в исходнике)
+            // document.getElementById('google-form').submit();
 
             document.getElementById('step-rating').style.display = 'none';
             const randomIndex = Math.floor(Math.random() * predictions.length);
             document.getElementById('prediction-content').innerText = predictions[randomIndex];
             document.getElementById('step-prediction').classList.add('show'); 
+            
+            // --- НОВАЯ ЛОГИКА ВИДИМОСТИ БЛОКОВ ---
+            const formBlock = document.querySelector('.site-review-form'); // форма на сайте
+            const yandexLink = document.querySelector('.yandex-btn');
+            const gisLink = document.querySelector('.gis-btn');
+            const phoneBlock = document.getElementById('negative-contact');
+            
+            if (ratingValue === 'Ужасно') {
+                // Негативный отзыв: показываем только форму на сайте, скрываем ссылки на карты
+                if (formBlock) formBlock.style.display = 'block';
+                if (yandexLink) yandexLink.style.display = 'none';
+                if (gisLink) gisLink.style.display = 'none';
+                if (phoneBlock) phoneBlock.style.display = 'block';
+            } else {
+                // Положительный отзыв (Нормально, Хорошо, Восхитительно): показываем ссылки на карты, скрываем форму на сайте
+                if (formBlock) formBlock.style.display = 'none';
+                if (yandexLink) yandexLink.style.display = 'block';
+                if (gisLink) gisLink.style.display = 'block';
+                if (phoneBlock) phoneBlock.style.display = 'none';
+            }
         } 
 
         function sendTextComment() {
@@ -181,8 +235,9 @@
             document.getElementById('field-rating').value = chosenRating;
             document.getElementById('field-comment').value = destination;
             document.getElementById('google-form').submit();
-       window.reviewSent = true; // при переходе по внешней ссылке тоже считаем, что данные ушли
+            window.reviewSent = true; // при переходе по внешней ссылке тоже считаем, что данные ушли
         }
+
         // Автоматическая отправка при закрытии страницы, если не было нажата кнопка "Отправить"
         window.addEventListener('beforeunload', function() {
             if (chosenRating && !window.reviewSent) {
@@ -190,7 +245,7 @@
                 const formData = new FormData();
                 formData.append('entry.1747806540', chosenRating);
                 formData.append('entry.1391125119', comment);
-                formData.append('entry.1391125119_sentinel', ''); // обязательно пустое
+                formData.append('entry.1391125119_sentinel', '');
                 navigator.sendBeacon(
                     'https://docs.google.com/forms/u/0/d/e/1FAIpQLSfvjUCBC27T87P_AUAHDjBenJGKOzSDl_iUtxhrXHD-4ClDdQ/formResponse',
                     formData
