@@ -153,14 +153,14 @@
             <div class="review-channels">
                 <div class="review-title">Оставьте ваш отзыв, мы будем рады любому 💫</div>
                 
-                <!-- Единая форма для отзыва на сайте (показывается всегда для всех оценок) -->
+                <!-- Форма отзыва на сайте (будет показываться только для Ужасно и Нормально) -->
                 <div class="site-review-form" id="form-container">
-                    <label>📝 Напишите, что вы думаете (по желанию):</label>
-                    <textarea id="guest-text" placeholder="Поделитесь впечатлениями, предложениями или просто оставьте поле пустым..."></textarea>
+                    <label>📝 Напишите, что вам не понравилось, или предложения:</label>
+                    <textarea id="guest-text" placeholder="Расскажите честно, что вам не понравилось, как нам стать лучше..."></textarea>
                     <button class="btn-submit" onclick="sendTextComment()">Отправить отзыв в систему</button>
                 </div>
 
-                <!-- Ссылки на карты (всегда видны, просто переход без автоматической отправки) -->
+                <!-- Ссылки на карты (видны всегда) -->
                 <a href="https://yandex.ru/maps/org/pakhlava/146173433967/reviews/?ll=55.131460%2C51.769838&z=15" target="_blank" class="btn-maps yandex-btn">💛 Вариант 2: Яндекс Карты</a>
                 
                 <a href="https://2gis.ru/orenburg/firm/70000001007497242" target="_blank" class="btn-maps gis-btn">💚 Вариант 3: Отзыв в 2ГИС</a>
@@ -208,24 +208,28 @@
             document.getElementById('step-rating').style.display = 'none';
             document.getElementById('step-prediction').classList.add('show');
             
-            // 5. Управление блоком с телефоном (только для Ужасно / Нормально)
+            // 5. Управление видимостью формы отзыва на сайте: показываем только для Ужасно и Нормально
+            const formBlock = document.getElementById('form-container');
             const phoneBlock = document.getElementById('negative-contact');
+            
             if (ratingValue === 'Ужасно' || ratingValue === 'Нормально') {
-                phoneBlock.style.display = 'block';
+                // Для негативных оценок: показываем форму отзыва на сайте и телефон
+                if (formBlock) formBlock.style.display = 'block';
+                if (phoneBlock) phoneBlock.style.display = 'block';
             } else {
-                phoneBlock.style.display = 'none';
+                // Для положительных (Хорошо, Восхитительно): скрываем форму отзыва на сайте и телефон
+                if (formBlock) formBlock.style.display = 'none';
+                if (phoneBlock) phoneBlock.style.display = 'none';
             }
             
-            // 6. Форма отзыва и ссылки на карты всегда видны (уже в CSS они видны, дополнительно убеждаемся)
-            const formBlock = document.querySelector('.site-review-form');
+            // Ссылки на Яндекс и 2ГИС всегда видны
             const yandexLink = document.querySelector('.yandex-btn');
             const gisLink = document.querySelector('.gis-btn');
-            if (formBlock) formBlock.style.display = 'block';
             if (yandexLink) yandexLink.style.display = 'block';
             if (gisLink) gisLink.style.display = 'block';
         }
 
-        // Отправка отзыва с текстом (если пользователь написал что-то или даже ничего)
+        // Отправка отзыва с текстом (только если форма видна и пользователь написал что-то)
         function sendTextComment() {
             if (!chosenRating) return;
             
