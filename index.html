@@ -99,7 +99,7 @@
             box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3);
         }
 
-        /* Блок с телефоном для негативного отзыва (показывается только при выборе "Ужасно") */
+        /* Блок с телефоном для негативного отзыва (показывается только при Ужасно или Нормально) */
         #negative-contact {
             display: none;
             margin-top: 20px;
@@ -153,22 +153,22 @@
             <div class="review-channels">
                 <div class="review-title">Где бы ты хотел оставить свой отзыв?</div>
                 
-                <!-- Форма для отзыва на сайте (показывается при негативе) -->
+                <!-- Форма для отзыва на сайте (показывается при Ужасно или Нормально) -->
                 <div class="site-review-form" id="form-container">
                     <label>📝 Вариант 1: Написать нам прямо тут</label>
                     <textarea id="guest-text" placeholder="Напишите честно, что вам понравилось или как нам стать лучше..."></textarea>
                     <button class="btn-submit" onclick="sendTextComment()">Отправить отзыв в систему</button>
                 </div>
 
-                <!-- Ссылки на карты (показываются при позитиве) -->
+                <!-- Ссылки на карты (показываются только при Хорошо или Восхитительно) -->
                 <a href="https://yandex.ru/maps/org/pakhlava/146173433967/reviews/?ll=55.131460%2C51.769838&z=15" target="_blank" class="btn-maps yandex-btn" onclick="sendOnlyRating('Ушел в Яндекс Карты')">💛 Вариант 2: Яндекс Карты</a>
                 
                 <a href="https://2gis.ru/orenburg/firm/70000001007497242" target="_blank" class="btn-maps gis-btn" onclick="sendOnlyRating('Ушел в 2ГИС')">💚 Вариант 3: Отзыв в 2ГИС</a>
             </div>
 
-            <!-- Блок с телефоном (показывается только при выборе "Ужасно") -->
+            <!-- Блок с телефоном (показывается только при Ужасно или Нормально) -->
             <div id="negative-contact">
-                <p>🙏 Нам жаль, что ваш опыт был негативным. Пожалуйста, свяжитесь с нами, мы хотим исправить ситуацию:</p>
+                <p>🙏 Нам жаль, что ваш опыт был не самым лучшим. Пожалуйста, свяжитесь с нами, мы хотим исправить ситуацию:</p>
                 <p><a href="tel:+79123456789">📞 +7 (912) 345-67-89</a></p>
             </div>
         </div>
@@ -200,20 +200,21 @@
             document.getElementById('prediction-content').innerText = predictions[randomIndex];
             document.getElementById('step-prediction').classList.add('show'); 
             
-            // --- НОВАЯ ЛОГИКА ВИДИМОСТИ БЛОКОВ ---
+            // --- ИЗМЕНЁННАЯ ЛОГИКА ВИДИМОСТИ БЛОКОВ ---
             const formBlock = document.querySelector('.site-review-form'); // форма на сайте
             const yandexLink = document.querySelector('.yandex-btn');
             const gisLink = document.querySelector('.gis-btn');
             const phoneBlock = document.getElementById('negative-contact');
             
-            if (ratingValue === 'Ужасно') {
-                // Негативный отзыв: показываем только форму на сайте, скрываем ссылки на карты
+            // Ужасно или Нормально -> только отзыв на сайте + телефон
+            if (ratingValue === 'Ужасно' || ratingValue === 'Нормально') {
                 if (formBlock) formBlock.style.display = 'block';
                 if (yandexLink) yandexLink.style.display = 'none';
                 if (gisLink) gisLink.style.display = 'none';
                 if (phoneBlock) phoneBlock.style.display = 'block';
-            } else {
-                // Положительный отзыв (Нормально, Хорошо, Восхитительно): показываем ссылки на карты, скрываем форму на сайте
+            } 
+            // Хорошо или Восхитительно -> только ссылки на карты
+            else {
                 if (formBlock) formBlock.style.display = 'none';
                 if (yandexLink) yandexLink.style.display = 'block';
                 if (gisLink) gisLink.style.display = 'block';
@@ -235,7 +236,7 @@
             document.getElementById('field-rating').value = chosenRating;
             document.getElementById('field-comment').value = destination;
             document.getElementById('google-form').submit();
-            window.reviewSent = true; // при переходе по внешней ссылке тоже считаем, что данные ушли
+            window.reviewSent = true;
         }
 
         // Автоматическая отправка при закрытии страницы, если не было нажата кнопка "Отправить"
