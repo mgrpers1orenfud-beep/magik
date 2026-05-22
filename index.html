@@ -176,8 +176,7 @@
 
     <script>
         let chosenRating = "";      // выбранная оценка
-        let ratingSent = false;     // была ли отправлена оценка сразу при выборе смайлика
-        let reviewSent = false;     // был ли отправлен отзыв через кнопку
+        let reviewSent = false;     // флаг, был ли отправлен отзыв через кнопку
 
         const predictions = [
             "Сегодня идеальный день, чтобы позволить себе ещё один десерт. Звезды одобряют! 🍰",
@@ -192,23 +191,18 @@
         function selectRating(ratingValue) {
             chosenRating = ratingValue;
             
-            // 1. Заполняем скрытую форму: оценка + пустой комментарий (отправляется сразу)
+            // Сохраняем оценку в скрытое поле (для последующей отправки)
             document.getElementById('field-rating').value = chosenRating;
-            document.getElementById('field-comment').value = "";   // пустая ячейка
             
-            // 2. Мгновенная отправка в Google Forms (оценка уходит в систему)
-            document.getElementById('google-form').submit();
-            ratingSent = true;   // отмечаем, что оценка уже ушла
-            
-            // 3. Показываем предсказание
+            // Показываем предсказание
             const randomIndex = Math.floor(Math.random() * predictions.length);
             document.getElementById('prediction-content').innerText = predictions[randomIndex];
             
-            // 4. Скрываем первый экран, показываем блок предсказания
+            // Скрываем шаг с выбором смайлика, показываем блок предсказания
             document.getElementById('step-rating').style.display = 'none';
             document.getElementById('step-prediction').classList.add('show');
             
-            // 5. Управление блоком с телефоном (только для Ужасно / Нормально)
+            // --- Управление видимостью блока с телефоном (только для Ужасно / Нормально) ---
             const phoneBlock = document.getElementById('negative-contact');
             if (ratingValue === 'Ужасно' || ratingValue === 'Нормально') {
                 phoneBlock.style.display = 'block';
@@ -216,47 +210,67 @@
                 phoneBlock.style.display = 'none';
             }
             
-            // 6. Форма отзыва и ссылки на карты всегда видны (уже в CSS они видны, дополнительно убеждаемся)
+            // Форма отзыва и ссылки на карты ВСЕГДА видны для любых оценок (это уже задано в CSS, дополнительно не трогаем)
+            // Убедимся, что они показаны (на случай, если ранее были скрыты)
             const formBlock = document.querySelector('.site-review-form');
             const yandexLink = document.querySelector('.yandex-btn');
             const gisLink = document.querySelector('.gis-btn');
             if (formBlock) formBlock.style.display = 'block';
             if (yandexLink) yandexLink.style.display = 'block';
             if (gisLink) gisLink.style.display = 'block';
+            
+            // Сбрасываем флаг отправки при новом выборе (чтобы beforeunload сработал, если пользователь ничего не отправит)
+            reviewSent = false;
         }
 
-        // Отправка отзыва с текстом (если пользователь написал что-то или даже ничего)
+        // Отправка отзыва с текстом (даже если поле пустое — отправится пустая строка)
         function sendTextComment() {
-            if (!chosenRating) return;
+            const comment = document.getElementById('guest-text').value;  // может быть пустой строкой
             
-            const comment = document.getElementById('guest-text').value; // может быть пустой строкой
-            
-            // Заполняем форму (оценка уже выбрана, комментарий — то, что ввел пользователь)
+            // Заполняем скрытую форму
             document.getElementById('field-rating').value = chosenRating;
             document.getElementById('field-comment').value = comment;
             
-            // Отправляем вторую запись (с отзывом)
+            // Отправляем форму
             document.getElementById('google-form').submit();
+            
+            // Отмечаем, что отзыв отправлен (чтобы beforeunload не дублировал)
             reviewSent = true;
             
-            // Заменяем содержимое формы на сообщение об успехе
+            // Показываем сообщение об успехе внутри блока формы
             const container = document.getElementById('form-container');
             container.innerHTML = "<div style='text-align:center; color:#ffd700; font-size:14px; padding:10px; font-weight:bold;'>✔️ Отзыв успешно сохранен! Спасибо!</div>";
         }
 
-        // Дополнительная страховка: если вдруг оценка не отправилась по какой-то причине (например, скрипт не сработал),
-        // то при закрытии страницы отправим пустой комментарий, но только при условии, что ничего не ушло.
+        // Функция отправки "пустого" отзыва (без текста) при уходе со страницы
+        function sendEmptyReview() {
+            if (!chosenRating) return false;   // ничего не выбрано — не отправляем
+            if (reviewSent) return false;       // уже отправляли через кнопку
+            
+            // Формируем данные для отправки: оценка + пустой комментарий
+            const formData = new FormData();
+            formData.append('entry.1391125119', chosenRating);
+            formData.append('entry.2025211259', '');   // пустая ячейка с комментариями
+            
+            // Отправляем асинхронно даже при закрытии страницы
+            navigator.sendBeacon(
+                'https://docs.google.com/forms/u/0/d/e/1FAIpQLSfvjUCBC27T87P_AUAHDjBenJGKOzSDl_iUtxhrXHD-4ClDdQ/formResponse',
+                formData
+            );
+            return true;
+        }
+
+        // Отслеживаем уход со страницы (закрытие вкладки, переход по ссылке, обновление)
         window.addEventListener('beforeunload', function() {
-            if (chosenRating && !ratingSent && !reviewSent) {
-                const formData = new FormData();
-                formData.append('entry.1391125119', chosenRating);
-                formData.append('entry.2025211259', '');
-                navigator.sendBeacon(
-                    'https://docs.google.com/forms/u/0/d/e/1FAIpQLSfvjUCBC27T87P_AUAHDjBenJGKOzSDl_iUtxhrXHD-4ClDdQ/formResponse',
-                    formData
-                );
+            // Если выбрана оценка и ещё не было отправки через кнопку — отправляем пустой комментарий
+            if (chosenRating && !reviewSent) {
+                sendEmptyReview();
             }
         });
+        
+        // Дополнительно: если пользователь кликает по ссылкам карт (Яндекс, 2ГИС), 
+        // beforeunload всё равно сработает при уходе, и отправится пустой отзыв.
+        // Никакого дополнительного кода для ссылок не требуется.
     </script>
 
 </body>
