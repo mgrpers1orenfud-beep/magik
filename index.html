@@ -7,8 +7,8 @@
     <style>
         body {
             font-family: sans-serif;
-            background: linear-gradient(135deg, #1e112a 0%, #0f081d 100%);
-            color: #ffffff;
+            background-color: #fcf988; /* Лимонный фон */
+            color: #333; /* Темный текст для контраста */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -19,17 +19,17 @@
             text-align: center;
         }
         .card {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.6); /* Полупрозрачная белая подложка */
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.1);
             border-radius: 24px;
             padding: 40px 30px;
             max-width: 400px;
             width: 100%;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
-        h1 { font-size: 24px; margin-bottom: 10px; color: #e2b6ff; }
-        p { font-size: 16px; color: #b3a7c4; margin-bottom: 30px; line-height: 1.5; }
+        h1 { font-size: 24px; margin-bottom: 10px; color: #333; }
+        p { font-size: 16px; color: #555; margin-bottom: 30px; line-height: 1.5; }
         .emoji-group { display: flex; justify-content: space-around; margin-bottom: 25px; }
         .emoji-btn { background: none; border: none; font-size: 45px; cursor: pointer; outline: none; transition: transform 0.2s; }
         .emoji-btn:hover { transform: scale(1.2); }
@@ -38,57 +38,57 @@
         .prediction-text {
             font-size: 18px;
             font-style: italic;
-            color: #ffd700;
-            background: rgba(255, 215, 0, 0.1);
-            border: 1px dashed rgba(255, 215, 0, 0.3);
+            color: #8b6e00;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px dashed #ffd700;
             border-radius: 16px;
             padding: 20px;
             margin: 20px 0 25px 0;
             line-height: 1.6;
         }
-        .thank-you { font-size: 15px; color: #8a7a9f; margin-bottom: 15px; }
+        .thank-you { font-size: 15px; color: #666; margin-bottom: 15px; }
         .show { display: block !important; }
 
         .review-channels {
             margin-top: 25px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(0,0,0,0.1);
             padding-top: 20px;
         }
-        .review-title { font-size: 15px; color: #e2b6ff; margin-bottom: 15px; line-height: 1.4; font-weight: bold; }
+        .review-title { font-size: 15px; color: #333; margin-bottom: 15px; line-height: 1.4; font-weight: bold; }
         
         .btn-maps { display: block; text-decoration: none; padding: 12px; margin: 10px 0; border-radius: 12px; font-weight: bold; font-size: 15px; transition: background 0.3s; text-align: center; }
-        .yandex-btn { background-color: #ffcc00; color: #000000; }
+        .yandex-btn { background-color: #ffcc00; color: #000; }
         .yandex-btn:hover { background-color: #e6b800; }
-        .gis-btn { background-color: #2ab300; color: #ffffff; }
+        .gis-btn { background-color: #2ab300; color: #fff; }
         .gis-btn:hover { background-color: #229200; }
 
         .site-review-form {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.1);
             border-radius: 16px;
             padding: 15px;
             margin-bottom: 15px;
             text-align: left;
         }
-        .site-review-form label { font-size: 13px; color: #b3a7c4; display: block; margin-bottom: 8px; text-align: center; font-weight: bold; }
+        .site-review-form label { font-size: 13px; color: #555; display: block; margin-bottom: 8px; text-align: center; font-weight: bold; }
         textarea {
             width: 100%;
             height: 70px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: #fff;
+            border: 1px solid #ccc;
             border-radius: 10px;
             padding: 10px;
-            color: #fff;
+            color: #333;
             font-size: 14px;
             box-sizing: border-box;
             resize: none;
             outline: none;
             margin-bottom: 10px;
         }
-        textarea:focus { border-color: #e2b6ff; }
+        textarea:focus { border-color: #ffcc00; }
         .btn-submit {
-            background: linear-gradient(90deg, #b666ff, #8a2be2);
-            color: white;
+            background: #333;
+            color: #fff;
             border: none;
             padding: 10px 20px;
             border-radius: 10px;
@@ -96,10 +96,8 @@
             font-weight: bold;
             cursor: pointer;
             width: 100%;
-            box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3);
         }
 
-        /* Блок с телефоном (только для Ужасно / Нормально) */
         #negative-contact {
             display: none;
             margin-top: 20px;
@@ -109,32 +107,18 @@
             border-left: 4px solid #ff5555;
             text-align: left;
         }
-        #negative-contact p {
-            margin: 0;
-            font-size: 15px;
-            color: #ffaaaa;
-        }
-        #negative-contact a {
-            color: #ffd966;
-            text-decoration: none;
-            font-size: 18px;
-            font-weight: bold;
-        }
-        #negative-contact a:hover {
-            text-decoration: underline;
-        }
+        #negative-contact p { margin: 0; font-size: 15px; color: #333; }
+        #negative-contact a { color: #d90000; text-decoration: none; font-size: 18px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <!-- Скрытый iframe для отправки форм без перезагрузки (для текстовых отзывов) -->
     <iframe name="hidden-submit" id="hidden-submit" style="display:none;"></iframe>
 
     <div class="card">
         <div id="step-rating">
             <h1>Ты готов узнать правду? 🗝️</h1>
             <p>Мы подготовили для тебя секретное послание. Поделись своим настроением от визита, чтобы открыть его:</p>
-            
             <div class="emoji-group">
                 <button class="emoji-btn" onclick="selectRating('Ужасно')">🙁</button>
                 <button class="emoji-btn" onclick="selectRating('Нормально')">😐</button>
@@ -149,133 +133,88 @@
             
             <div class="review-channels">
                 <div class="review-title">Оставьте ваш отзыв, мы будем рады любому 💫</div>
-                
-                <!-- Форма отзыва на сайте (только для Ужасно и Нормально) -->
                 <div class="site-review-form" id="form-container">
                     <label>📝 Напишите, что вам не понравилось, или предложения:</label>
-                    <textarea id="guest-text" placeholder="Расскажите честно, что вам не понравилось, как нам стать лучше..."></textarea>
-                    <button class="btn-submit" onclick="sendTextComment()">Отправить отзыв в систему</button>
+                    <textarea id="guest-text" placeholder="Расскажите честно, что вам не понравилось..."></textarea>
+                    <button class="btn-submit" onclick="sendTextComment()">Отправить отзыв</button>
                 </div>
-
-                <!-- Ссылки на карты (только для Хорошо и Восхитительно) -->
-                <a href="https://yandex.ru/maps/org/pakhlava/146173433967/reviews/?ll=55.131460%2C51.769838&z=15" target="_blank" class="btn-maps yandex-btn" id="yandex-link">💛 Вариант 2: Яндекс Карты</a>
-                
+                <a href="https://yandex.ru/maps/org/pakhlava/146173433967/reviews/" target="_blank" class="btn-maps yandex-btn" id="yandex-link">💛 Вариант 2: Яндекс Карты</a>
                 <a href="https://2gis.ru/orenburg/firm/70000001007497242" target="_blank" class="btn-maps gis-btn" id="gis-link">💚 Вариант 3: Отзыв в 2ГИС</a>
             </div>
 
-            <!-- Блок с телефоном (только для Ужасно и Нормально) -->
             <div id="negative-contact">
-                <p>🙏 Нам жаль, что ваш опыт был не самым лучшим. Пожалуйста, свяжитесь с нами, мы хотим исправить ситуацию:</p>
+                <p>🙏 Нам жаль, что ваш опыт был не самым лучшим. Пожалуйста, свяжитесь с нами:</p>
                 <p><a href="tel:+79123456789">📞 +7 (912) 345-67-89</a></p>
             </div>
         </div>
     </div>
 
     <script>
-        let chosenRating = "";          // выбранная оценка
-        let ratingSent = false;         // отправлена ли оценка при выборе смайлика
-        let additionalActionSent = false; // отправлено ли дополнительное действие (отзыв или переход)
-
-        // URL Google Forms и названия полей
+        // JS скрипт остается прежним (функции отправки и логика работают так же)
+        let chosenRating = "";
+        let ratingSent = false;
+        let additionalActionSent = false;
         const FORM_URL = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfvjUCBC27T87P_AUAHDjBenJGKOzSDl_iUtxhrXHD-4ClDdQ/formResponse";
         const FIELD_RATING = "entry.1391125119";
         const FIELD_COMMENT = "entry.2025211259";
 
-        // Универсальная отправка данных в Google Forms через iframe (для текстовых отзывов)
         function submitToGoogleForm(rating, comment) {
             const tempForm = document.createElement('form');
-            tempForm.method = "POST";
-            tempForm.action = FORM_URL;
-            tempForm.target = "hidden-submit";
-            tempForm.style.display = "none";
-
-            const ratingInput = document.createElement('input');
-            ratingInput.type = "text";
-            ratingInput.name = FIELD_RATING;
-            ratingInput.value = rating;
-            tempForm.appendChild(ratingInput);
-
-            const commentInput = document.createElement('input');
-            commentInput.type = "text";
-            commentInput.name = FIELD_COMMENT;
-            commentInput.value = comment;
-            tempForm.appendChild(commentInput);
-
-            document.body.appendChild(tempForm);
-            tempForm.submit();
-            setTimeout(() => {
-                document.body.removeChild(tempForm);
-            }, 200);
+            tempForm.method = "POST"; tempForm.action = FORM_URL; tempForm.target = "hidden-submit"; tempForm.style.display = "none";
+            const ratingInput = document.createElement('input'); ratingInput.name = FIELD_RATING; ratingInput.value = rating; tempForm.appendChild(ratingInput);
+            const commentInput = document.createElement('input'); commentInput.name = FIELD_COMMENT; commentInput.value = comment; tempForm.appendChild(commentInput);
+            document.body.appendChild(tempForm); tempForm.submit();
+            setTimeout(() => document.body.removeChild(tempForm), 200);
         }
 
-        // Отправка через sendBeacon для переходов по ссылкам (не блокирует навигацию)
         function sendBeaconData(rating, comment) {
             const formData = new FormData();
-            formData.append(FIELD_RATING, rating);
-            formData.append(FIELD_COMMENT, comment);
+            formData.append(FIELD_RATING, rating); formData.append(FIELD_COMMENT, comment);
             navigator.sendBeacon(FORM_URL, formData);
         }
 
         const predictions = [
             "Сегодня идеальный день, чтобы позволить себе ещё один десерт. Звезды одобряют! 🍰",
-            "Тебя ждет неожиданное, но очень приятное известие в течение ближайших 24 часов. Будь начеку! ✉️",
-            "Твоя энергия сегодня притягивает удачу. Доверься своей интуиции, она ведет тебя в правильном направлении. ✨",
-            "Кто-то прямо сейчас думает о тебе с теплотой и улыбкой. Скоро вы встретитесь! 🥰",
-            "Сегодня отличный вечер, чтобы оставить все заботы за порогом и просто насладиться моментом. 🥂",
-            "Впереди крутой поворот, который принесет много радости. Главное — улыбайся чаще! 🌟",
-            "Твое гастрономическое чутье сегодня на высоте. Следующий выбор блюда принесет истинное блаженство! 🍕"
+            "Тебя ждет неожиданное, но очень приятное известие. Будь начеку! ✉️",
+            "Твоя энергия сегодня притягивает удачу. Доверься интуиции! ✨",
+            "Кто-то прямо сейчас думает о тебе с теплотой. 🥰",
+            "Сегодня отличный вечер, чтобы насладиться моментом. 🥂",
+            "Впереди крутой поворот, который принесет радость! 🌟",
+            "Твое гастрономическое чутье сегодня на высоте! 🍕"
         ];
 
         function selectRating(ratingValue) {
             chosenRating = ratingValue;
-            
-            // 1. Отправляем оценку с пустым комментарием (всегда)
             submitToGoogleForm(chosenRating, "");
             ratingSent = true;
-            
-            // 2. Показываем предсказание
             const randomIndex = Math.floor(Math.random() * predictions.length);
             document.getElementById('prediction-content').innerText = predictions[randomIndex];
             
-            // 3. Меняем видимость блоков
-            const formBlock = document.getElementById('form-container');   // форма отзыва на сайте
+            const formBlock = document.getElementById('form-container');
             const yandexLink = document.getElementById('yandex-link');
             const gisLink = document.getElementById('gis-link');
             const phoneBlock = document.getElementById('negative-contact');
             
             if (ratingValue === 'Ужасно' || ratingValue === 'Нормально') {
-                // Для негативных: показываем форму отзыва и телефон, скрываем ссылки на карты
-                if (formBlock) formBlock.style.display = 'block';
-                if (phoneBlock) phoneBlock.style.display = 'block';
-                if (yandexLink) yandexLink.style.display = 'none';
-                if (gisLink) gisLink.style.display = 'none';
+                formBlock.style.display = 'block'; phoneBlock.style.display = 'block';
+                yandexLink.style.display = 'none'; gisLink.style.display = 'none';
             } else {
-                // Для положительных: показываем ссылки на карты, скрываем форму отзыва и телефон
-                if (formBlock) formBlock.style.display = 'none';
-                if (phoneBlock) phoneBlock.style.display = 'none';
-                if (yandexLink) yandexLink.style.display = 'block';
-                if (gisLink) gisLink.style.display = 'block';
+                formBlock.style.display = 'none'; phoneBlock.style.display = 'none';
+                yandexLink.style.display = 'block'; gisLink.style.display = 'block';
             }
-            
-            // 4. Переключаем экраны
             document.getElementById('step-rating').style.display = 'none';
             document.getElementById('step-prediction').classList.add('show');
         }
 
-        // Отправка текстового отзыва (только для негативных оценок)
         function sendTextComment() {
             if (!chosenRating) return;
             const comment = document.getElementById('guest-text').value || "";
-            // Отправляем вторую запись: та же оценка + введённый текст
             submitToGoogleForm(chosenRating, comment);
             additionalActionSent = true;
-            
-            // Заменяем форму на сообщение об успехе
             const container = document.getElementById('form-container');
-            container.innerHTML = "<div style='text-align:center; color:#ffd700; font-size:14px; padding:10px; font-weight:bold;'>✔️ Отзыв успешно сохранен! Спасибо!</div>";
+            container.innerHTML = "<div style='text-align:center; color:#333; font-size:14px; padding:10px; font-weight:bold;'>✔️ Отзыв успешно сохранен! Спасибо!</div>";
         }
 
-        // Обработчик для ссылок на карты: отправляем данные через sendBeacon (не блокирует переход)
         function onMapClick(destination) {
             if (!chosenRating) return;
             let comment = (destination === 'yandex') ? "Перешел в Яндекс Карты" : "Перешел в 2ГИС";
@@ -283,29 +222,14 @@
             additionalActionSent = true;
         }
 
-        // Навешиваем обработчики на ссылки (без preventDefault, чтобы переход работал)
         document.addEventListener('DOMContentLoaded', function() {
-            const yandexLink = document.getElementById('yandex-link');
-            const gisLink = document.getElementById('gis-link');
-            if (yandexLink) {
-                yandexLink.addEventListener('click', function() {
-                    onMapClick('yandex');
-                });
-            }
-            if (gisLink) {
-                gisLink.addEventListener('click', function() {
-                    onMapClick('gis');
-                });
-            }
+            document.getElementById('yandex-link')?.addEventListener('click', () => onMapClick('yandex'));
+            document.getElementById('gis-link')?.addEventListener('click', () => onMapClick('gis'));
         });
 
-        // Страховка на случай, если пользователь закрыл страницу, не отправив оценку (хотя selectRating срабатывает сразу)
         window.addEventListener('beforeunload', function() {
-            if (chosenRating && !ratingSent && !additionalActionSent) {
-                sendBeaconData(chosenRating, "");
-            }
+            if (chosenRating && !ratingSent && !additionalActionSent) sendBeaconData(chosenRating, "");
         });
     </script>
-
 </body>
 </html>
