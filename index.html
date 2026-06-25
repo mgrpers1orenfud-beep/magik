@@ -5,7 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Только для твоих глаз 🔮</title>
     <style>
-        /* ... все стили как в предыдущем коде ... */
+        /* Базовое оформление и стили вашей карточки */
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 20px; color: #1a1a1a; }
+        .card { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .step-content { display: none; }
+        .step-content.active { display: block; }
+        .emoji-group, .clarify-options { display: flex; gap: 10px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+        .emoji-btn, .clarify-btn, .btn-submit, .back-btn, .btn-maps { padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s; }
+        .emoji-btn { font-size: 32px; background: none; }
+        .clarify-btn { background-color: #f0f0f5; width: 100%; text-align: left; }
+        .clarify-btn:hover { background-color: #e2e2ec; }
+        .btn-submit { background-color: #1a1a1a; color: white; width: 100%; margin-top: 15px; }
+        .back-btn { background: none; color: #777; margin-top: 15px; }
+        .prediction-text { background: #fdf6e2; padding: 15px; border-radius: 8px; margin: 15px 0; font-style: italic; text-align: center; border-left: 4px solid #f39c12; }
+        textarea { width: 100%; height: 80px; margin-top: 10px; padding: 10px; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box; resize: vertical; }
+        .review-channels { margin-top: 20px; }
+        .btn-maps { display: block; text-align: center; text-decoration: none; margin-top: 10px; }
+        .yandex-btn { background-color: #ffcc00; color: black; }
+        .gis-btn { background-color: #2bbd5e; color: white; }
+        .table-badge { text-align: center; font-weight: bold; background: #e8f5e9; padding: 8px; border-radius: 20px; color: #2e7d32; display: inline-block; margin-bottom: 15px; }
+        .error-message { color: #d32f2f; background: #ffebee; padding: 10px; border-radius: 8px; text-align: center; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -13,14 +32,12 @@
     <iframe name="hidden-submit" id="hidden-submit" style="display:none;"></iframe>
 
     <div class="card">
-        <!-- БЕЙДЖ С НОМЕРОМ СТОЛА -->
         <div id="table-display">
             <div class="table-badge">
                 🍽️ Стол <span id="table-number-display">?</span>
             </div>
         </div>
 
-        <!-- ===== ШАГ 1: ВЫБОР ОЦЕНКИ ===== -->
         <div id="step-rating" class="step-content active">
             <div class="step-counter">Шаг 1 из 3</div>
             <h1>Ваш вердикт или судьба? <span class="key-icon">🗝️</span></h1>
@@ -33,28 +50,25 @@
             </div>
         </div>
 
-        <!-- ===== ШАГ 2: УТОЧНЯЮЩИЙ ВОПРОС ===== -->
         <div id="step-clarify" class="step-content">
             <div class="step-counter">Шаг 2 из 3</div>
             <h2 id="clarify-question">Что вам понравилось больше всего?</h2>
             <div class="clarify-options" id="clarify-options">
-                <!-- Кнопки генерируются через JavaScript -->
-            </div>
+                </div>
             <button class="back-btn" onclick="goBackToRating()">← Назад</button>
         </div>
 
-        <!-- ===== ШАГ 3: ПРЕДСКАЗАНИЕ + ОТЗЫВ ===== -->
         <div id="step-prediction" class="step-content">
             <div class="step-counter">Шаг 3 из 3</div>
             <div class="thank-you">Твоя карма заряжена ✨ Твое послание:</div>
             <div class="prediction-text" id="prediction-content"></div>
             
             <div class="review-channels">
-                <div class="review-title">Оставьте ваш отзыв, мы будем рады любому 💫</div>
+                <div class="review-title" style="font-weight: bold; margin-bottom: 10px;">Оставьте ваш отзыв, мы будем рады любому 💫</div>
                 
                 <div class="site-review-form" id="form-container">
-                    <label>📝 Напишите, что вам не понравилось, или предложения:</label>
-                    <textarea id="guest-text" placeholder="Расскажите честно, что вам не понравилось, как нам стать лучше..."></textarea>
+                    <label>📝 Напишите ваши впечатления или предложения:</label>
+                    <textarea id="guest-text" placeholder="Расскажите честно, как нам стать лучше..."></textarea>
                     <button class="btn-submit" onclick="sendFinalFeedback()">Отправить отзыв</button>
                 </div>
 
@@ -62,41 +76,41 @@
                 <a href="https://2gis.ru/orenburg/firm/70000001030551040/tab/reviews?m=55.104185%2C51.770355%2F14.97" target="_blank" class="btn-maps gis-btn" id="gis-link">💚 Вариант 3: Отзыв в 2ГИС</a>
             </div>
 
-            <div id="negative-contact">
-                <p>🙏 Нам жаль, что ваш опыт был не самым лучшим. Пожалуйста, свяжитесь с нами:</p>
-                <p><a href="tel:+79123456789">📞 +7 (3532) 43-09-01</a></p>
+            <div id="negative-contact" style="margin-top: 20px; padding: 10px; background: #fff3e0; border-radius: 8px; display: none;">
+                <p>🙏 Нам жаль, что ваш опыт был не самым лучшим. Пожалуйста, свяжитесь с нами напрямую:</p>
+                <p><a href="tel:+73532430901" style="font-weight: bold; color: #e65100; text-decoration: none;">📞 +7 (3532) 43-09-01</a></p>
             </div>
         </div>
     </div>
 
     <script>
         // ================================================================
-        //  НАСТРОЙКИ - ВСЕ ID НАЙДЕНЫ!
+        //  НАСТРОЙКИ СИСТЕМЫ (ТОКЕН И ID УЖЕ ВСТАВЛЕНЫ!)
         // ================================================================
-        
+        const TG_BOT_TOKEN = "8779419381:AAHW7jyCnDNNgN8tNFz-EIB_0ZB8h_8dk6w"; 
+        const TG_CHAT_ID = "-1005241160150"; 
+
         const TOTAL_TABLES = 17;
-        
         const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfvjUCBC27T87P_AUAHDjBenJGKOzSDl_iUtxhrXHD-4ClDdQ/formResponse";
+        
         const FIELD_RATING = "entry.1391125119";
         const FIELD_COMMENT = "entry.2025211259";
         const FIELD_TABLE = "entry.1877245822";
         const FIELD_CLARIFY = "entry.464582943";
         
         // ================================================================
-        //  ПЕРЕМЕННЫЕ
+        //  ПЕРЕМЕННЫЕ СОСТОЯНИЯ
         // ================================================================
-        
         let selectedTable = null;
         let chosenRating = "";
         let chosenClarify = "";
         let commentText = "";
-        let feedbackSent = false; // ← ОТПРАВЛЕН ЛИ ОТЗЫВ?
+        let feedbackSent = false; 
         let currentStep = 1;
         
         // ================================================================
-        //  ФУНКЦИИ ДЛЯ РАБОТЫ С ШАГАМИ
+        //  ФУНКЦИИ ПЕРЕКЛЮЧЕНИЯ ШАГОВ
         // ================================================================
-        
         function showStep(stepNumber) {
             document.querySelectorAll('.step-content').forEach(el => {
                 el.classList.remove('active');
@@ -118,9 +132,8 @@
         }
         
         // ================================================================
-        //  ШАГ 1: ВЫБОР ОЦЕНКИ
+        //  ШАГ 1: ВЫБОР ОЦЕНКИ И ГЕНЕРАЦИЯ КНОПОК (ИСПРАВЛЕНО)
         // ================================================================
-        
         function selectRating(ratingValue) {
             if (!selectedTable) {
                 alert('❌ Ошибка! Номер стола не определен.\n\nПожалуйста, отсканируйте QR-код заново.');
@@ -136,49 +149,36 @@
             const optionsContainer = document.getElementById('clarify-options');
             optionsContainer.innerHTML = '';
             
+            let options = [];
+            
             if (isPositive) {
-                question.textContent = 'Что вам понравилось больше всего?';
-                
-                const options = [
+                question.textContent = 'Что вам понравилось больше всего?'; 
+                options = [
                     { id: 'kitchen_good', label: '🍕 Понравилась кухня', icon: '🍕' },
                     { id: 'service_good', label: '👨‍🍳 Понравилось обслуживание', icon: '👨‍🍳' }
                 ];
-                
-                options.forEach(opt => {
-                    const btn = document.createElement('button');
-                    btn.className = 'clarify-btn';
-                    btn.innerHTML = `<span class="icon">${opt.icon}</span> ${opt.label}`;
-                    btn.onclick = () => selectClarify(opt.id, opt.label);
-                    optionsContainer.appendChild(btn);
-                });
-                
             } else if (isNegative) {
                 question.textContent = 'Что вам не понравилось больше всего?';
-                
-                const options = [
+                options = [
                     { id: 'kitchen_bad', label: '🍕 Не понравилась кухня', icon: '🍕' },
                     { id: 'service_bad', label: '👨‍🍳 Не понравилось обслуживание', icon: '👨‍🍳' }
                 ];
-                
-                options.forEach(opt => {
-                    const btn = document.createElement('button');
-                    btn.className = 'clarify-btn';
-                    btn.innerHTML = `<span class="icon">${opt.icon}</span> ${opt.label}`;
-                    btn.onclick = () => selectClarify(opt.id, opt.label);
-                    optionsContainer.appendChild(btn);
-                });
             }
+            
+            // ТУТ БЫЛА ОШИБКА КАВЫЧЕК — ТЕПЕРЬ ВСЁ ИСПРАВЛЕНО! ВЕРСТКА БОЛЬШЕ НЕ СЛЕТИТ
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'clarify-btn';
+                btn.innerHTML = `<span class="icon">${opt.icon}</span> ${opt.label}`;
+                btn.onclick = () => selectClarify(opt.id, opt.label);
+                optionsContainer.appendChild(btn);
+            });
             
             showStep(2);
         }
         
-        // ================================================================
-        //  ШАГ 2: ВЫБОР УТОЧНЕНИЯ
-        // ================================================================
-        
         function selectClarify(clarifyId, clarifyLabel) {
             chosenClarify = clarifyLabel;
-            // ❌ НЕ ОТПРАВЛЯЕМ! Просто запоминаем
             showPrediction();
         }
         
@@ -187,9 +187,8 @@
         }
         
         // ================================================================
-        //  ШАГ 3: ПРЕДСКАЗАНИЕ
+        //  ШАГ 3: ВЫВОД ПРЕДСКАЗАНИЯ В КАРТОЧКУ
         // ================================================================
-        
         const predictions = [
             "Сегодня идеальный день, чтобы позволить себе ещё один десерт. Звезды одобряют! 🍰",
             "Тебя ждет неожиданное, но очень приятное известие. Будь начеку! ✉️",
@@ -215,7 +214,7 @@
                 yandexLink.style.display = 'none';
                 gisLink.style.display = 'none';
             } else {
-                formBlock.style.display = 'none';
+                formBlock.style.display = 'block'; 
                 phoneBlock.style.display = 'none';
                 yandexLink.style.display = 'block';
                 gisLink.style.display = 'block';
@@ -225,57 +224,59 @@
         }
         
         // ================================================================
-        //  🔥 ОТПРАВКА ФИНАЛЬНОГО ОТЗЫВА (ТОЛЬКО 1 РАЗ!)
+        //  ОТПРАВКА ДАННЫХ В ТЕЛЕГРАМ-БОТ через API
         // ================================================================
-        
+        function sendToTelegram(rating, clarify, comment, table) {
+            const text = `🔔 *Новый отзыв!*\n\n` +
+                         `🍽 *Стол:* № ${table}\n` +
+                         `⭐ *Оценка:* ${rating}\n` +
+                         `📌 *Детали:* ${clarify || "Не выбрано"}\n` +
+                         `📝 *Комментарий:* ${comment || "Без текста"}`;
+
+            const url = `https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`;
+            
+            fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    chat_id: TG_CHAT_ID,
+                    text: text,
+                    parse_mode: "Markdown"
+                })
+            }).catch(err => console.error('Ошибка отправки в TG:', err));
+        }
+
+        // ================================================================
+        //  ОТПРАВКА ФИНАЛЬНОГО ОТЗЫВА (И ТАБЛИЦА, И БОТ)
+        // ================================================================
         function sendFinalFeedback() {
-            // Проверяем, не отправлен ли уже отзыв
-            if (feedbackSent) {
-                console.log('✅ Отзыв уже отправлен, повторная отправка отключена');
-                return;
-            }
+            if (feedbackSent) return;
             
-            if (!chosenRating) {
-                alert('Сначала выберите оценку!');
-                return;
-            }
+            if (!chosenRating) { alert('Сначала выберите оценку!'); return; }
+            if (!selectedTable) { alert('Ошибка: не определен номер стола!'); return; }
             
-            if (!selectedTable) {
-                alert('Ошибка: не определен номер стола!');
-                return;
-            }
-            
-            // Получаем комментарий из текстового поля
             commentText = document.getElementById('guest-text').value || "";
             
-            // ✅ ОТПРАВЛЯЕМ ВСЕ ДАННЫЕ ОДНИМ ЗАПРОСОМ
-            submitFinalFeedback(
-                chosenRating,
-                chosenClarify,
-                commentText,
-                selectedTable
-            );
+            // 1. Отправляем в Google Таблицу
+            submitFinalFeedback(chosenRating, chosenClarify, commentText, selectedTable);
             
-            // Помечаем, что отзыв отправлен
+            // 2. Отправляем в Telegram группу ресторана
+            sendToTelegram(chosenRating, chosenClarify, commentText, selectedTable);
+            
             feedbackSent = true;
             
-            // Показываем сообщение об успехе
+            // Сообщение об успешном сохранении на экран гостя
             const container = document.getElementById('form-container');
             container.innerHTML = `
-                <div style='text-align:center; color:#1a1a1a; font-size:14px; padding:10px; font-weight:bold;'>
+                <div style='text-align:center; color:#2e7d32; font-size:15px; padding:15px; font-weight:bold; background:#e8f5e9; border-radius:8px;'>
                     ✔️ Отзыв для стола №${selectedTable} успешно сохранен!<br>
-                    <span style='font-size:12px; color:#777;'>Спасибо, что помогаете нам стать лучше! 🙏</span>
+                    <span style='font-size:13px; color:#555; font-weight:normal;'>Спасибо, что помогаете нам становиться лучше! 🙏</span>
                 </div>
             `;
             
-            // Блокируем кнопки карт (чтобы не отправляли повторно)
             document.getElementById('yandex-link')?.style.setProperty('pointer-events', 'none');
             document.getElementById('gis-link')?.style.setProperty('pointer-events', 'none');
         }
-        
-        // ================================================================
-        //  ОТПРАВКА ВСЕХ ДАННЫХ В GOOGLE FORMS
-        // ================================================================
         
         function submitFinalFeedback(rating, clarify, comment, table) {
             const tempForm = document.createElement('form');
@@ -284,85 +285,50 @@
             tempForm.target = "hidden-submit";
             tempForm.style.display = "none";
             
-            // Оценка
-            const ratingInput = document.createElement('input');
-            ratingInput.name = FIELD_RATING;
-            ratingInput.value = rating;
-            tempForm.appendChild(ratingInput);
-            
-            // Уточнение
-            const clarifyInput = document.createElement('input');
-            clarifyInput.name = FIELD_CLARIFY;
-            clarifyInput.value = clarify;
-            tempForm.appendChild(clarifyInput);
-            
-            // Комментарий
-            const commentInput = document.createElement('input');
-            commentInput.name = FIELD_COMMENT;
-            commentInput.value = comment;
-            tempForm.appendChild(commentInput);
-            
-            // Номер стола
-            const tableInput = document.createElement('input');
-            tableInput.name = FIELD_TABLE;
-            tableInput.value = table;
-            tempForm.appendChild(tableInput);
+            const fields = [
+                { name: FIELD_RATING, val: rating },
+                { name: FIELD_CLARIFY, val: clarify },
+                { name: FIELD_COMMENT, val: comment },
+                { name: FIELD_TABLE, val: table }
+            ];
+
+            fields.forEach(f => {
+                const input = document.createElement('input');
+                input.name = f.name;
+                input.value = f.val;
+                tempForm.appendChild(input);
+            });
             
             document.body.appendChild(tempForm);
             tempForm.submit();
             
             setTimeout(() => {
-                if (tempForm.parentNode) {
-                    document.body.removeChild(tempForm);
-                }
+                if (tempForm.parentNode) document.body.removeChild(tempForm);
             }, 200);
         }
         
-        // ================================================================
-        //  ОТПРАВКА ПРИ ЗАКРЫТИИ СТРАНИЦЫ (ЕСЛИ НЕ ОТПРАВЛЕНО)
-        // ================================================================
-        
+        // Отправка фоном, если гость ушел, не нажав кнопку отправки вручную
         function sendBeaconFinal() {
-            // Если отзыв уже отправлен — ничего не делаем
-            if (feedbackSent) {
-                return;
-            }
+            if (feedbackSent || !chosenRating) return;
             
-            // Если нет оценки — ничего не отправляем
-            if (!chosenRating) {
-                return;
-            }
-            
-            // Получаем комментарий (если есть)
             const commentElement = document.getElementById('guest-text');
             const comment = commentElement ? commentElement.value || "" : "";
-            
-            console.log('📤 Отправка финального отзыва при закрытии страницы...');
             
             const formData = new FormData();
             formData.append(FIELD_RATING, chosenRating);
             formData.append(FIELD_CLARIFY, chosenClarify || "");
             formData.append(FIELD_COMMENT, comment);
             formData.append(FIELD_TABLE, selectedTable || "");
-            
             navigator.sendBeacon(FORM_URL, formData);
+            
+            sendToTelegram(chosenRating, chosenClarify, comment, selectedTable);
+
             feedbackSent = true;
         }
         
         // ================================================================
-        //  КЛИК ПО КАРТАМ (ТЕПЕРЬ НЕ ОТПРАВЛЯЕТ)
+        //  ПАРСИНГ СТОЛА ИЗ URL (?table=6)
         // ================================================================
-        
-        function onMapClick(destination) {
-            // Просто открываем карты, НИЧЕГО НЕ ОТПРАВЛЯЕМ
-            // Весь отзыв уже будет отправлен при нажатии "Отправить" или при закрытии
-            console.log(`📍 Переход на карты (стол ${selectedTable})`);
-        }
-        
-        // ================================================================
-        //  ПОЛУЧЕНИЕ НОМЕРА СТОЛА ИЗ QR-КОДА
-        // ================================================================
-        
         function getTableFromQR() {
             const urlParams = new URLSearchParams(window.location.search);
             const tableParam = urlParams.get('table');
@@ -383,52 +349,38 @@
             }
         }
         
-        // ================================================================
-        //  ИНИЦИАЛИЗАЦИЯ
-        // ================================================================
-        
         document.addEventListener('DOMContentLoaded', function() {
             const tableNumber = getTableFromQR();
             
             if (tableNumber) {
                 selectedTable = tableNumber;
                 displayTableNumber(tableNumber);
-                console.log(`✅ Стол №${tableNumber} определен автоматически через QR-код`);
+                console.log(`✅ Стол №${tableNumber} определен автоматически`);
             } else {
                 displayTableNumber('?');
-                console.error('❌ Номер стола не найден в URL');
-                
                 const tableDisplay = document.getElementById('table-display');
                 tableDisplay.innerHTML = `
                     <div class="error-message">
                         ⚠️ Не удалось определить номер стола<br>
-                        <small>Пожалуйста, отсканируйте QR-код заново</small>
+                        <small>Пожалуйста, пересканируйте QR-код</small>
                     </div>
                 `;
             }
             
-            // Обработчики для карт — ТОЛЬКО ПЕРЕХОД, БЕЗ ОТПРАВКИ
             document.getElementById('yandex-link')?.addEventListener('click', function(e) {
                 e.preventDefault();
-                onMapClick('yandex');
                 window.open(this.href, '_blank');
             });
             
             document.getElementById('gis-link')?.addEventListener('click', function(e) {
                 e.preventDefault();
-                onMapClick('gis');
                 window.open(this.href, '_blank');
             });
         });
-        
-        // ================================================================
-        //  🔥 ОТПРАВКА ПРИ ЗАКРЫТИИ СТРАНИЦЫ (ЕСЛИ НЕ ОТПРАВЛЕНО)
-        // ================================================================
         
         window.addEventListener('beforeunload', function() {
             sendBeaconFinal();
         });
     </script>
-
 </body>
 </html>
