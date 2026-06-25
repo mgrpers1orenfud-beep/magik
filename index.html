@@ -7,7 +7,8 @@
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f5f5f7;
+            /* НЕЖНО-ЖЕЛТЫЙ ФОН СТРАНИЦЫ */
+            background-color: #FFFDF0; 
             color: #1a1a1a;
             margin: 0;
             padding: 20px;
@@ -18,12 +19,13 @@
             box-sizing: border-box;
         }
         .card {
+            /* КАРТОЧКА НА КРАСИВОМ КОНТРАСТЕ */
             background: #ffffff;
             border-radius: 20px;
             padding: 24px;
             max-width: 400px;
             width: 100%;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 20px rgba(220, 210, 180, 0.4);
             box-sizing: border-box;
         }
         .step-content {
@@ -52,7 +54,7 @@
         }
         .table-badge {
             display: inline-block;
-            background: #f2f2f7;
+            background: #f7f5e6; /* Легкий желтоватый оттенок для плашки стола */
             padding: 6px 12px;
             border-radius: 20px;
             font-size: 14px;
@@ -83,7 +85,7 @@
             margin-bottom: 20px;
         }
         .clarify-btn {
-            background: #f2f2f7;
+            background: #f7f5e6; /* Желтоватый оттенок для кнопок выбора */
             border: none;
             padding: 14px;
             border-radius: 12px;
@@ -107,7 +109,7 @@
             padding: 0;
         }
         .prediction-text {
-            background: #fbfbfd;
+            background: #fffdf5;
             border-left: 4px solid #ff9500;
             padding: 12px;
             border-radius: 0 12px 12px 0;
@@ -186,7 +188,6 @@
             </div>
         </div>
 
-        <!-- ШАГ 1 -->
         <div id="step-rating" class="step-content active">
             <div class="step-counter">Шаг 1 из 3</div>
             <h1>Ваш вердикт или судьба? 🗝️</h1>
@@ -199,7 +200,6 @@
             </div>
         </div>
 
-        <!-- ШАГ 2 -->
         <div id="step-clarify" class="step-content">
             <div class="step-counter">Шаг 2 из 3</div>
             <h2 id="clarify-question">Что вам понравилось больше всего?</h2>
@@ -207,7 +207,6 @@
             <button class="back-btn" onclick="goBackToRating()">← Назад</button>
         </div>
 
-        <!-- ШАГ 3 -->
         <div id="step-prediction" class="step-content">
             <div class="step-counter">Шаг 3 из 3</div>
             <p>Твоя карма заряжена ✨ Твое послание:</p>
@@ -216,12 +215,12 @@
             <div class="review-channels">
                 <div class="site-review-form" id="form-container">
                     <label>📝 Напишите, что вам не понравилось:</label>
-                    <textarea id="guest-text" placeholder="Расскажите честно, что пошло не так..."></textarea>
+                    <textarea id="guest-text" placeholder="Расскажите честно, что пошло не так... (необязательно)"></textarea>
                     <button class="btn-submit" onclick="sendFinalFeedback()">Отправить отзыв</button>
                 </div>
 
-                <a href="https://yandex.ru/maps/org/in_tempo_pizza_grill/1032263051/reviews/?ll=55.096605%2C51.771002&z=15" target="_blank" class="btn-maps yandex-btn" id="yandex-link">💛 Вариант 2: Яндекс Карты</a>
-                <a href="https://2gis.ru/orenburg/firm/70000001030551040/tab/reviews?m=55.104185%2C51.770355%2F14.97" target="_blank" class="btn-maps gis-btn" id="gis-link">💚 Вариант 3: Отзыв в 2ГИС</a>
+                <a href="https://yandex.ru/maps/org/in_tempo_pizza_grill/1032263051/reviews/?ll=55.096605%2C51.771002&z=15" target="_blank" class="btn-maps yandex-btn" id="yandex-link" onclick="logMapClick('Яндекс Карты')">💛 Вариант 2: Яндекс Карты</a>
+                <a href="https://2gis.ru/orenburg/firm/70000001030551040/tab/reviews?m=55.104185%2C51.770355%2F14.97" target="_blank" class="btn-maps gis-btn" id="gis-link" onclick="logMapClick('2ГИС')">💚 Вариант 3: Отзыв в 2ГИС</a>
             </div>
 
             <div id="negative-contact">
@@ -321,24 +320,28 @@
                 phoneBlock.style.display = 'block';
                 yandexLink.style.display = 'none';
                 gisLink.style.display = 'none';
+                
+                submitToGoogleForm(chosenRating, chosenClarify, "Без комментария (ожидание ввода)", selectedTable);
             } else {
                 formBlock.style.display = 'none';
                 phoneBlock.style.display = 'none';
                 yandexLink.style.display = 'block';
                 gisLink.style.display = 'block';
                 
-                // Сразу отправляем позитивный клик в фоновом режиме
-                submitToGoogleForm(chosenRating, chosenClarify, "Положительный отзыв (перенаправлен на карты)", selectedTable);
+                submitToGoogleForm(chosenRating, chosenClarify, "Положительный отзыв (выбор карт)", selectedTable);
             }
             
             showStep(3);
         }
         
+        function logMapClick(mapName) {
+            submitToGoogleForm(chosenRating, chosenClarify, `Кликнул переход на кнопку: ${mapName}`, selectedTable);
+        }
+        
         function sendFinalFeedback() {
-            if (feedbackSent) return;
             if (!chosenRating || !selectedTable) return;
             
-            const commentText = document.getElementById('guest-text').value || "";
+            const commentText = document.getElementById('guest-text').value || "Без текста";
             submitToGoogleForm(chosenRating, chosenClarify, commentText, selectedTable);
             
             feedbackSent = true;
@@ -398,7 +401,6 @@
                 selectedTable = tableNumber;
                 document.getElementById('table-number-display').textContent = tableNumber;
             } else {
-                // Если зашли без ссылки ?table=Х, временно ставим тест
                 selectedTable = "Тест";
                 document.getElementById('table-number-display').textContent = 'Тест';
             }
