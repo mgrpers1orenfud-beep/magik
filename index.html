@@ -1,9 +1,16 @@
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Только для твоих глаз 🔮</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', sans-serif;
             margin: 0;
@@ -14,12 +21,12 @@
             align-items: center;
             min-height: 100vh;
             text-align: center;
-            background-color: #f6fc9a; /* Цвет фона */
+            background-color: #f6fc9a;
             position: relative;
             overflow-x: hidden;
         }
 
-        /* Фоновый узор из еды и вина */
+        /* Фоновый узор */
         body::before {
             content: "🍕 🍝 🥖 🍷 🍕 🍝 🥖 🍷 🍕 🍝 🥖 🍷 🍕 🍝 🥖 🍷 🍕 🍝 🥖 🍷";
             position: fixed;
@@ -28,7 +35,7 @@
             width: 120%;
             height: 120%;
             z-index: -1;
-            opacity: 0.15; /* Еле заметные */
+            opacity: 0.15;
             font-size: 80px;
             letter-spacing: 50px;
             line-height: 150px;
@@ -50,46 +57,223 @@
             position: relative;
         }
 
-        h1 { font-size: 24px; margin-bottom: 15px; color: #2d2d2d; line-height: 1.3; }
-        .key-icon { font-size: 28px; margin-left: 5px; vertical-align: middle; } /* Стиль для иконки ключа */
+        /* Бейдж стола - КРАСИВОЕ ОТОБРАЖЕНИЕ НОМЕРА */
+        .table-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffd700, #f5a623);
+            color: #000;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            animation: pulse 2s infinite;
+        }
 
-        p { font-size: 16px; color: #555; margin-bottom: 30px; line-height: 1.5; }
-        .emoji-group { display: flex; justify-content: space-around; margin-bottom: 25px; }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .table-badge span {
+            font-size: 24px;
+            margin: 0 5px;
+        }
+
+        h1 { 
+            font-size: 24px; 
+            margin-bottom: 15px; 
+            color: #2d2d2d; 
+            line-height: 1.3; 
+        }
+
+        .key-icon { 
+            font-size: 28px; 
+            margin-left: 5px; 
+            vertical-align: middle; 
+        }
+
+        p { 
+            font-size: 16px; 
+            color: #555; 
+            margin-bottom: 30px; 
+            line-height: 1.5; 
+        }
+
+        .emoji-group { 
+            display: flex; 
+            justify-content: space-around; 
+            margin-bottom: 25px; 
+        }
         
-        .emoji-btn { background: none; border: none; font-size: 45px; cursor: pointer; transition: transform 0.2s; padding: 0; outline: none; }
-        .emoji-btn:hover { transform: scale(1.15); }
+        .emoji-btn { 
+            background: none; 
+            border: none; 
+            font-size: 45px; 
+            cursor: pointer; 
+            transition: transform 0.2s; 
+            padding: 0; 
+            outline: none; 
+        }
+
+        .emoji-btn:hover { 
+            transform: scale(1.15); 
+        }
         
-        /* Стили для экранов */
-        .step-content { display: block; }
-        .prediction-block { display: none; }
-        .prediction-block.show { display: block !important; }
+        .step-content { 
+            display: block; 
+        }
+
+        .prediction-block { 
+            display: none; 
+        }
+
+        .prediction-block.show { 
+            display: block !important; 
+        }
         
         .prediction-text {
-            font-size: 18px; font-style: italic; color: #7a6600;
+            font-size: 18px; 
+            font-style: italic; 
+            color: #7a6600;
             background: rgba(255, 255, 255, 0.5);
-            border: 1px dashed #ffd700; border-radius: 16px;
-            padding: 20px; margin: 20px 0 25px 0; line-height: 1.6;
+            border: 1px dashed #ffd700; 
+            border-radius: 16px;
+            padding: 20px; 
+            margin: 20px 0 25px 0; 
+            line-height: 1.6;
         }
-        .thank-you { font-size: 15px; color: #777; margin-bottom: 15px; }
 
-        .review-channels { margin-top: 25px; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 20px; }
-        .review-title { font-size: 15px; color: #333; margin-bottom: 15px; font-weight: bold; }
+        .thank-you { 
+            font-size: 15px; 
+            color: #777; 
+            margin-bottom: 15px; 
+        }
+
+        .review-channels { 
+            margin-top: 25px; 
+            border-top: 1px solid rgba(0,0,0,0.05); 
+            padding-top: 20px; 
+        }
+
+        .review-title { 
+            font-size: 15px; 
+            color: #333; 
+            margin-bottom: 15px; 
+            font-weight: bold; 
+        }
         
-        .btn-maps { display: block; text-decoration: none; padding: 12px; margin: 10px 0; border-radius: 12px; font-weight: bold; font-size: 15px; transition: background 0.3s; text-align: center; }
-        .yandex-btn { background-color: #ffcc00; color: #000; }
-        .yandex-btn:hover { background-color: #e6b800; }
-        .gis-btn { background-color: #2ab300; color: #fff; }
-        .gis-btn:hover { background-color: #229200; }
+        .btn-maps { 
+            display: block; 
+            text-decoration: none; 
+            padding: 12px; 
+            margin: 10px 0; 
+            border-radius: 12px; 
+            font-weight: bold; 
+            font-size: 15px; 
+            transition: background 0.3s; 
+            text-align: center; 
+        }
 
-        .site-review-form { background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.05); border-radius: 16px; padding: 15px; margin-bottom: 15px; text-align: left; }
-        textarea { width: 100%; height: 70px; background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 10px; color: #333; box-sizing: border-box; resize: none; outline: none; margin-bottom: 10px; }
-        textarea:focus { border-color: #ffd700; }
-        .btn-submit { background: #2d2d2d; color: #fff; border: none; padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; }
+        .yandex-btn { 
+            background-color: #ffcc00; 
+            color: #000; 
+        }
 
-        #negative-contact { display: none; margin-top: 20px; padding: 15px; background: rgba(255, 80, 80, 0.05); border-radius: 16px; border-left: 4px solid #ff5555; text-align: left; }
-        #negative-contact p { margin: 0; font-size: 14px; color: #333; }
-        #negative-contact a { color: #cc0000; text-decoration: none; font-weight: bold; font-size: 16px; }
-        #negative-contact a:hover { text-decoration: underline; }
+        .yandex-btn:hover { 
+            background-color: #e6b800; 
+        }
+
+        .gis-btn { 
+            background-color: #2ab300; 
+            color: #fff; 
+        }
+
+        .gis-btn:hover { 
+            background-color: #229200; 
+        }
+
+        .site-review-form { 
+            background: rgba(0,0,0,0.02); 
+            border: 1px solid rgba(0,0,0,0.05); 
+            border-radius: 16px; 
+            padding: 15px; 
+            margin-bottom: 15px; 
+            text-align: left; 
+        }
+
+        textarea { 
+            width: 100%; 
+            height: 70px; 
+            background: #fff; 
+            border: 1px solid #ddd; 
+            border-radius: 10px; 
+            padding: 10px; 
+            color: #333; 
+            box-sizing: border-box; 
+            resize: none; 
+            outline: none; 
+            margin-bottom: 10px; 
+        }
+
+        textarea:focus { 
+            border-color: #ffd700; 
+        }
+
+        .btn-submit { 
+            background: #2d2d2d; 
+            color: #fff; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 10px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            width: 100%; 
+        }
+
+        #negative-contact { 
+            display: none; 
+            margin-top: 20px; 
+            padding: 15px; 
+            background: rgba(255, 80, 80, 0.05); 
+            border-radius: 16px; 
+            border-left: 4px solid #ff5555; 
+            text-align: left; 
+        }
+
+        #negative-contact p { 
+            margin: 0; 
+            font-size: 14px; 
+            color: #333; 
+        }
+
+        #negative-contact a { 
+            color: #cc0000; 
+            text-decoration: none; 
+            font-weight: bold; 
+            font-size: 16px; 
+        }
+
+        #negative-contact a:hover { 
+            text-decoration: underline; 
+        }
+
+        /* Стиль для ошибки, если стол не определен */
+        .error-message {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #856404;
+        }
+
+        .error-message a {
+            color: #d39e00;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -97,8 +281,16 @@
     <iframe name="hidden-submit" id="hidden-submit" style="display:none;"></iframe>
 
     <div class="card">
+        <!-- ===== БЕЙДЖ С НОМЕРОМ СТОЛА ===== -->
+        <div id="table-display">
+            <div class="table-badge">
+                🍽️ Стол <span id="table-number-display">?</span>
+            </div>
+        </div>
+
+        <!-- ===== ЭКРАН С ОЦЕНКОЙ ===== -->
         <div id="step-rating" class="step-content">
-            <h1>Ваш вердикт или судьба ? <span class="key-icon">🗝️</span></h1>
+            <h1>Ваш вердикт или судьба? <span class="key-icon">🗝️</span></h1>
             <p>Мы подготовили для тебя секретное послание. Поделись своим настроением от визита, чтобы открыть его:</p>
             <div class="emoji-group">
                 <button class="emoji-btn" onclick="selectRating('Ужасно')">🙁</button>
@@ -108,6 +300,7 @@
             </div>
         </div>
 
+        <!-- ===== ЭКРАН С ПРЕДСКАЗАНИЕМ ===== -->
         <div id="step-prediction" class="step-content prediction-block">
             <div class="thank-you">Твоя карма заряжена ✨ Твое послание:</div>
             <div class="prediction-text" id="prediction-content"></div>
@@ -133,29 +326,122 @@
     </div>
 
     <script>
-        let chosenRating = "";
-        let ratingSent = false;
-        let additionalActionSent = false;
-
-        const FORM_URL = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfvjUCBC27T87P_AUAHDjBenJGKOzSDl_iUtxhrXHD-4ClDdQ/formResponse";
-        const FIELD_RATING = "entry.1391125119";
-        const FIELD_COMMENT = "entry.2025211259";
-
-        function submitToGoogleForm(rating, comment) {
-            const tempForm = document.createElement('form');
-            tempForm.method = "POST"; tempForm.action = FORM_URL; tempForm.target = "hidden-submit"; tempForm.style.display = "none";
-            const ratingInput = document.createElement('input'); ratingInput.name = FIELD_RATING; ratingInput.value = rating; tempForm.appendChild(ratingInput);
-            const commentInput = document.createElement('input'); commentInput.name = FIELD_COMMENT; commentInput.value = comment; tempForm.appendChild(commentInput);
-            document.body.appendChild(tempForm); tempForm.submit();
-            setTimeout(() => document.body.removeChild(tempForm), 200);
+        // ================================================================
+        //  НАСТРОЙКИ - ВСЕ ID УЖЕ ЗАМЕНЕНЫ!
+        // ================================================================
+        
+        const TOTAL_TABLES = 17; // Всего столов
+        
+        // Google Forms - ВСЕ ID НАСТРОЕНЫ!
+        const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfvjUCBC27T87P_AUAHDjBenJGKOzSDl_iUtxhrXHD-4ClDdQ/formResponse";
+        const FIELD_RATING = "entry.1391125119";      // ✅ ID поля "Оценка"
+        const FIELD_COMMENT = "entry.2025211259";      // ✅ ID поля "Ответ"
+        const FIELD_TABLE = "entry.1877245822";        // ✅ ID поля "Номер стола" (НОВОЕ!)
+        
+        // ================================================================
+        //  ПЕРЕМЕННЫЕ
+        // ================================================================
+        
+        let selectedTable = null;        // Номер стола
+        let chosenRating = "";           // Выбранная оценка
+        let ratingSent = false;          // Отправлена ли оценка
+        let additionalActionSent = false; // Отправлено ли доп. действие
+        
+        // ================================================================
+        //  ГЛАВНАЯ ФУНКЦИЯ - ПОЛУЧЕНИЕ НОМЕРА СТОЛА ИЗ QR-КОДА
+        // ================================================================
+        
+        function getTableFromQR() {
+            // Читаем параметры из URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const tableParam = urlParams.get('table');
+            
+            // Проверяем, что номер стола - число от 1 до 17
+            if (tableParam) {
+                const tableNumber = parseInt(tableParam);
+                if (tableNumber >= 1 && tableNumber <= TOTAL_TABLES) {
+                    return tableNumber;
+                }
+            }
+            
+            // Если номер не найден или некорректный
+            return null;
         }
-
-        function sendBeaconData(rating, comment) {
+        
+        // ================================================================
+        //  ОТОБРАЖЕНИЕ НОМЕРА СТОЛА
+        // ================================================================
+        
+        function displayTableNumber(tableNumber) {
+            const displayElement = document.getElementById('table-number-display');
+            if (displayElement) {
+                displayElement.textContent = tableNumber || '?';
+            }
+        }
+        
+        // ================================================================
+        //  ОТПРАВКА В GOOGLE FORMS
+        // ================================================================
+        
+        function submitToGoogleForm(rating, comment, table) {
+            if (!table) {
+                alert('⚠️ Ошибка: не определен номер стола! Пожалуйста, отсканируйте QR-код заново.');
+                return false;
+            }
+            
+            const tempForm = document.createElement('form');
+            tempForm.method = "POST";
+            tempForm.action = FORM_URL;
+            tempForm.target = "hidden-submit";
+            tempForm.style.display = "none";
+            
+            // Оценка
+            const ratingInput = document.createElement('input');
+            ratingInput.name = FIELD_RATING;
+            ratingInput.value = rating;
+            tempForm.appendChild(ratingInput);
+            
+            // Комментарий
+            const commentInput = document.createElement('input');
+            commentInput.name = FIELD_COMMENT;
+            commentInput.value = comment;
+            tempForm.appendChild(commentInput);
+            
+            // 🔥 НОМЕР СТОЛА - привязка!
+            const tableInput = document.createElement('input');
+            tableInput.name = FIELD_TABLE;
+            tableInput.value = table;
+            tempForm.appendChild(tableInput);
+            
+            document.body.appendChild(tempForm);
+            tempForm.submit();
+            
+            // Удаляем форму через секунду
+            setTimeout(() => {
+                if (tempForm.parentNode) {
+                    document.body.removeChild(tempForm);
+                }
+            }, 200);
+            
+            return true;
+        }
+        
+        // Отправка через Beacon (если пользователь закрывает страницу)
+        function sendBeaconData(rating, comment, table) {
+            if (!table) return;
+            
             const formData = new FormData();
-            formData.append(FIELD_RATING, rating); formData.append(FIELD_COMMENT, comment);
+            formData.append(FIELD_RATING, rating);
+            formData.append(FIELD_COMMENT, comment);
+            formData.append(FIELD_TABLE, table);
+            
             navigator.sendBeacon(FORM_URL, formData);
         }
-
+        
+        // ================================================================
+        //  ПРЕДСКАЗАНИЯ
+        // ================================================================
+        
         const predictions = [
             "Сегодня идеальный день, чтобы позволить себе ещё один десерт. Звезды одобряют! 🍰",
             "Тебя ждет неожиданное, но очень приятное известие. Будь начеку! ✉️",
@@ -165,55 +451,150 @@
             "Впереди крутой поворот, который принесет радость! 🌟",
             "Твое гастрономическое чутье сегодня на высоте! 🍕"
         ];
-
+        
+        // ================================================================
+        //  ВЫБОР ОЦЕНКИ
+        // ================================================================
+        
         function selectRating(ratingValue) {
+            // Проверяем, определен ли стол
+            if (!selectedTable) {
+                alert('❌ Ошибка! Номер стола не определен.\n\nПожалуйста, отсканируйте QR-код заново или проверьте ссылку.\n\nСсылка должна содержать: ?table=N (где N - номер стола)');
+                return;
+            }
+            
             chosenRating = ratingValue;
-            submitToGoogleForm(chosenRating, "");
+            
+            // Отправляем оценку в Google Forms
+            submitToGoogleForm(chosenRating, "", selectedTable);
             ratingSent = true;
             
+            // Показываем предсказание
             const randomIndex = Math.floor(Math.random() * predictions.length);
             document.getElementById('prediction-content').innerText = predictions[randomIndex];
             
+            // Показываем нужные блоки в зависимости от оценки
             const formBlock = document.getElementById('form-container');
             const yandexLink = document.getElementById('yandex-link');
             const gisLink = document.getElementById('gis-link');
             const phoneBlock = document.getElementById('negative-contact');
             
             if (ratingValue === 'Ужасно' || ratingValue === 'Нормально') {
-                formBlock.style.display = 'block'; phoneBlock.style.display = 'block';
-                yandexLink.style.display = 'none'; gisLink.style.display = 'none';
+                // Плохая оценка - показываем форму и телефон
+                formBlock.style.display = 'block';
+                phoneBlock.style.display = 'block';
+                yandexLink.style.display = 'none';
+                gisLink.style.display = 'none';
             } else {
-                formBlock.style.display = 'none'; phoneBlock.style.display = 'none';
-                yandexLink.style.display = 'block'; gisLink.style.display = 'block';
+                // Хорошая оценка - показываем ссылки на карты
+                formBlock.style.display = 'none';
+                phoneBlock.style.display = 'none';
+                yandexLink.style.display = 'block';
+                gisLink.style.display = 'block';
             }
             
+            // Переключаем экраны
             document.getElementById('step-rating').style.display = 'none';
             document.getElementById('step-prediction').classList.add('show');
         }
-
+        
+        // ================================================================
+        //  ОТПРАВКА ТЕКСТОВОГО КОММЕНТАРИЯ
+        // ================================================================
+        
         function sendTextComment() {
-            if (!chosenRating) return;
+            if (!chosenRating) {
+                alert('Сначала выберите оценку!');
+                return;
+            }
+            
+            if (!selectedTable) {
+                alert('Ошибка: не определен номер стола!');
+                return;
+            }
+            
             const comment = document.getElementById('guest-text').value || "";
-            submitToGoogleForm(chosenRating, comment);
+            
+            // Отправляем комментарий с номером стола
+            submitToGoogleForm(chosenRating, comment, selectedTable);
             additionalActionSent = true;
+            
+            // Показываем сообщение об успехе
             const container = document.getElementById('form-container');
-            container.innerHTML = "<div style='text-align:center; color:#1a1a1a; font-size:14px; padding:10px; font-weight:bold;'>✔️ Отзыв успешно сохранен! Спасибо!</div>";
+            container.innerHTML = `
+                <div style='text-align:center; color:#1a1a1a; font-size:14px; padding:10px; font-weight:bold;'>
+                    ✔️ Отзыв для стола №${selectedTable} успешно сохранен!<br>
+                    <span style='font-size:12px; color:#777;'>Спасибо, что помогаете нам стать лучше! 🙏</span>
+                </div>
+            `;
         }
-
+        
+        // ================================================================
+        //  КЛИК ПО КАРТАМ
+        // ================================================================
+        
         function onMapClick(destination) {
             if (!chosenRating) return;
-            let comment = (destination === 'yandex') ? "Перешел в Яндекс Карты" : "Перешел в 2ГИС";
-            sendBeaconData(chosenRating, comment);
+            if (!selectedTable) return;
+            
+            const comment = (destination === 'yandex') 
+                ? `Перешел в Яндекс Карты (стол ${selectedTable})` 
+                : `Перешел в 2ГИС (стол ${selectedTable})`;
+            
+            sendBeaconData(chosenRating, comment, selectedTable);
             additionalActionSent = true;
         }
-
+        
+        // ================================================================
+        //  ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ
+        // ================================================================
+        
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('yandex-link')?.addEventListener('click', () => onMapClick('yandex'));
-            document.getElementById('gis-link')?.addEventListener('click', () => onMapClick('gis'));
+            // 1. Пытаемся получить номер стола из QR-кода (URL)
+            const tableNumber = getTableFromQR();
+            
+            if (tableNumber) {
+                // ✅ Стол успешно определен!
+                selectedTable = tableNumber;
+                displayTableNumber(tableNumber);
+                console.log(`✅ Стол №${tableNumber} определен автоматически через QR-код`);
+            } else {
+                // ❌ Стол не определен - показываем ошибку
+                displayTableNumber('?');
+                console.error('❌ Номер стола не найден в URL');
+                
+                // Можно показать сообщение об ошибке прямо на странице
+                const tableDisplay = document.getElementById('table-display');
+                tableDisplay.innerHTML = `
+                    <div class="error-message">
+                        ⚠️ Не удалось определить номер стола<br>
+                        <small>Пожалуйста, отсканируйте QR-код заново</small>
+                    </div>
+                `;
+            }
+            
+            // 2. Обработчики для кнопок карт
+            document.getElementById('yandex-link')?.addEventListener('click', function(e) {
+                e.preventDefault();
+                onMapClick('yandex');
+                window.open(this.href, '_blank');
+            });
+            
+            document.getElementById('gis-link')?.addEventListener('click', function(e) {
+                e.preventDefault();
+                onMapClick('gis');
+                window.open(this.href, '_blank');
+            });
         });
-
+        
+        // ================================================================
+        //  ОТПРАВКА ПРИ ЗАКРЫТИИ СТРАНИЦЫ
+        // ================================================================
+        
         window.addEventListener('beforeunload', function() {
-            if (chosenRating && !ratingSent && !additionalActionSent) sendBeaconData(chosenRating, "");
+            if (chosenRating && !ratingSent && !additionalActionSent && selectedTable) {
+                sendBeaconData(chosenRating, "", selectedTable);
+            }
         });
     </script>
 
