@@ -225,9 +225,9 @@
         const FIELD_TABLE = "entry.1877245822";
         const FIELD_CLARIFY = "entry.464582943";
         
-        // 🔔 АКТУАЛЬНЫЕ НАСТРОЙКИ НОВОГО TELEGRAM БОТА
+        // 🔔 АКТУАЛЬНЫЕ НАСТРОЙКИ ВАШЕГО TELEGRAM БОТА
         const TELEGRAM_TOKEN = "8964695663:AAEYVFhAKusCi64vuYYPwNA4G6zUIIiypIc"; 
-        const TELEGRAM_CHAT_ID = "-1005342166614"; 
+        const TELEGRAM_CHAT_ID = "-5451372031"; 
         
         let selectedTable = null;
         let chosenRating = "";
@@ -387,7 +387,7 @@
             const encodedText = encodeURIComponent(textMessage);
             const tgImgUrl = "https://api.telegram.org/bot" + TELEGRAM_TOKEN + "/sendMessage?chat_id=" + TELEGRAM_CHAT_ID + "&text=" + encodedText;
 
-            // Сверхнадёжная отправка запроса через Image API для полного обхода блокировок браузера (CORS)
+            // Сверхнадёжная отправка запроса через Image API для полного обхода ограничений CORS браузера
             const trigger = new Image();
             trigger.src = tgImgUrl;
         }
