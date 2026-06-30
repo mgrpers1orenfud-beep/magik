@@ -171,16 +171,13 @@
     </style>
 </head>
 <body>
-
     <iframe name="hidden-submit" id="hidden-submit" style="display:none;"></iframe>
-
     <div class="card">
         <div id="table-display">
             <div class="table-badge">
                 🍽️ Стол <span id="table-number-display">?</span>
             </div>
         </div>
-
         <div id="step-rating" class="step-content active">
             <div class="step-counter">Шаг 1 из 3</div>
             <h1>Ваш вердикт или судьба? 🗝️</h1>
@@ -192,14 +189,12 @@
                 <button class="emoji-btn" onclick="selectRating('Восхитительно')">🤩</button>
             </div>
         </div>
-
         <div id="step-clarify" class="step-content">
             <div class="step-counter">Шаг 2 из 3</div>
             <h2 id="clarify-question">Что вам понравилось больше всего?</h2>
             <div class="clarify-options" id="clarify-options"></div>
             <button class="back-btn" onclick="goBackToRating()">← Назад</button>
         </div>
-
         <div id="step-prediction" class="step-content">
             <div class="step-counter">Шаг 3 из 3</div>
             <p>Твоя карма заряжена ✨ Твое послание:</p>
@@ -211,18 +206,17 @@
                     <textarea id="guest-text" placeholder="Расскажите честно, что пошло не так... (необязательно)"></textarea>
                     <button class="btn-submit" onclick="sendFinalFeedback()">Отправить отзыв</button>
                 </div>
-
-                <a href="https://yandex.ru/maps/org/in_tempo_pizza_grill/1032263051/reviews/?ll=55.096605%2C51.771002&z=15" target="_blank" class="btn-maps yandex-btn" id="yandex-link" onclick="logMapClick('Яндекс Карты')">💛 Вариант 2: Яндекс Карты</a>
-                <a href="https://2gis.ru/orenburg/firm/70000001030551040/tab/reviews?m=55.104185%2C51.770355%2F14.97" target="_blank" class="btn-maps gis-btn" id="gis-link" onclick="logMapClick('2ГИС')">💚 Вариант 3: Отзыв в 2ГИС</a>
+                <a href="https://yandex.ru/maps/org/in_tempo_pizza_grill/1032263051/reviews/?ll=55.096605%2C51.771002&z=15"
+ target="_blank" class="btn-maps yandex-btn" id="yandex-link" onclick="logMapClick('Яндекс Карты')">💛 Вариант 2: Яндекс Карты</a>
+                <a href="https://2gis.ru/orenburg/firm/70000001030551040/tab/reviews?m=55.104185%2C51.770355%2F14.97"
+ target="_blank" class="btn-maps gis-btn" id="gis-link" onclick="logMapClick('2ГИС')">💚 Вариант 3: Отзыв в 2ГИС</a>
             </div>
-
             <div id="negative-contact">
                 <p>🙏 Нам очень жаль. Свяжитесь с нами напрямую:</p>
                 <p><a href="tel:+73532430901">📞 +7 (3532) 43-09-01</a></p>
             </div>
         </div>
     </div>
-
     <script>
         const TOTAL_TABLES = 17;
         const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfvjUCBC27T87P_AUAHDjBenJGKOzSDl_iUtxhrXHD-4ClDdQ/formResponse";
@@ -230,6 +224,10 @@
         const FIELD_COMMENT = "entry.2025211259";
         const FIELD_TABLE = "entry.1877245822";
         const FIELD_CLARIFY = "entry.464582943";
+        
+        // 🔔 НАСТРОЙКИ TELEGRAM УСПЕШНО ИНТЕГРИРОВАНЫ
+        const TELEGRAM_TOKEN = "8250809573:AAFyMOW7sYqCXpYWljUJfITDkuQmEFefjes"; 
+        const TELEGRAM_CHAT_ID = "-1005342166614"; 
         
         let selectedTable = null;
         let chosenRating = "";
@@ -314,22 +312,19 @@
                 yandexLink.style.display = 'none';
                 gisLink.style.display = 'none';
                 
-                // Для негатива сразу шлем статус ожидания текста
                 submitToGoogleForm(chosenRating, chosenClarify, "Без комментария (ожидание ввода)", selectedTable);
             } else {
                 formBlock.style.display = 'none';
                 phoneBlock.style.display = 'none';
                 yandexLink.style.display = 'block';
                 gisLink.style.display = 'block';
-                // ПРАВКА: Для хороших оценок ТУТ больше ничего заранее не отправляем!
             }
             
             showStep(3);
         }
         
-        // ПРАВКА: Отправка клика по картам теперь пишет конкретное название
         function logMapClick(mapName) {
-            submitToGoogleForm(chosenRating, chosenClarify, mapName, selectedTable);
+            submitToGoogleForm(chosenRating, chosenClarify, `Переход на ${mapName}`, selectedTable);
         }
         
         function sendFinalFeedback() {
@@ -348,6 +343,7 @@
         }
         
         function submitToGoogleForm(rating, clarify, comment, table) {
+            // 1. Отправка в Google Форму
             const tempForm = document.createElement('form');
             tempForm.method = "POST";
             tempForm.action = FORM_URL;
@@ -375,6 +371,30 @@
             setTimeout(() => {
                 if (tempForm.parentNode) document.body.removeChild(tempForm);
             }, 300);
+
+            // 2. Отправка в Telegram
+            let emojiHeader = "⭐️ Новый отзыв!";
+            if(rating === "Ужасно") emojiHeader = "🚨 КРИТИЧЕСКИЙ ОТЗЫВ!";
+            if(rating === "Восхитительно") emojiHeader = "🔥 ПОТРЯСАЮЩИЙ ОТЗЫВ!";
+
+            const textMessage = 
+                `${emojiHeader}\n\n` +
+                `🍽️ **Стол:** ${table}\n` +
+                `🎭 **Оценка:** ${rating}\n` +
+                `🎯 **Детали:** ${clarify}\n` +
+                `📝 **Комментарий/Действие:** ${comment}`;
+
+            const tgUrl = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
+            
+            fetch(tgUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: textMessage,
+                    parse_mode: "Markdown"
+                })
+            }).catch(err => console.error("Ошибка Telegram:", err));
         }
         
         function getTableFromQR() {
