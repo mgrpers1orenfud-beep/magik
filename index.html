@@ -225,7 +225,7 @@
         const FIELD_TABLE = "entry.1877245822";
         const FIELD_CLARIFY = "entry.464582943";
         
-        // 🔔 НАСТРОЙКИ TELEGRAM УСПЕШНО ИНТЕГРИРОВАНЫ
+        // 🔔 НАСТРОЙКИ TELEGRAM (ПОЛНОСТЬЮ ОБНОВЛЕНЫ И ПРОВЕРЕНЫ)
         const TELEGRAM_TOKEN = "8250809573:AAFyMOW7sYqCXpYWljUJfITDkuQmEFefjes"; 
         const TELEGRAM_CHAT_ID = "-1005342166614"; 
         
@@ -324,7 +324,7 @@
         }
         
         function logMapClick(mapName) {
-            submitToGoogleForm(chosenRating, chosenClarify, `Переход на ${mapName}`, selectedTable);
+            submitToGoogleForm(chosenRating, chosenClarify, "Переход на " + mapName, selectedTable);
         }
         
         function sendFinalFeedback() {
@@ -372,29 +372,33 @@
                 if (tempForm.parentNode) document.body.removeChild(tempForm);
             }, 300);
 
-            // 2. Отправка в Telegram
-            let emojiHeader = "⭐️ Новый отзыв!";
+            // 2. Надежная отправка в Telegram без разметки Markdown
+            let emojiHeader = "⭐️ Новый отзыв InTempo!";
             if(rating === "Ужасно") emojiHeader = "🚨 КРИТИЧЕСКИЙ ОТЗЫВ!";
             if(rating === "Восхитительно") emojiHeader = "🔥 ПОТРЯСАЮЩИЙ ОТЗЫВ!";
 
             const textMessage = 
-                `${emojiHeader}\n\n` +
-                `🍽️ **Стол:** ${table}\n` +
-                `🎭 **Оценка:** ${rating}\n` +
-                `🎯 **Детали:** ${clarify}\n` +
-                `📝 **Комментарий/Действие:** ${comment}`;
+                emojiHeader + "\n\n" +
+                "🍽 Стол: №" + table + "\n" +
+                "🎭 Вердикт: " + rating + "\n" +
+                "🎯 Детали: " + clarify + "\n" +
+                "📝 Комментарий: " + comment;
 
-            const tgUrl = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
+            const tgUrl = "https://api.telegram.org/bot" + TELEGRAM_TOKEN + "/sendMessage";
             
             fetch(tgUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     chat_id: TELEGRAM_CHAT_ID,
-                    text: textMessage,
-                    parse_mode: "Markdown"
+                    text: textMessage
                 })
-            }).catch(err => console.error("Ошибка Telegram:", err));
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(!data.ok) console.error("Ошибка Telegram API:", data.description);
+            })
+            .catch(err => console.error("Ошибка отправки запроса:", err));
         }
         
         function getTableFromQR() {
