@@ -232,7 +232,6 @@
         let selectedTable = null;
         let chosenRating = "";
         let chosenClarify = "";
-        let feedbackSent = false;
         
         function showStep(stepNumber) {
             document.querySelectorAll('.step-content').forEach(el => {
@@ -278,8 +277,13 @@
             showStep(2);
         }
         
+        // Этап 1: Гость выбрал детали на Шаге 2. МГНОВЕННО отправляем ПЕРВОЕ уведомление
         function selectClarify(clarifyLabel) {
             chosenClarify = clarifyLabel;
+            
+            // Сразу шлем 1-е уведомление (пока без финального текста/кликов по картам)
+            submitToServices(chosenRating, chosenClarify, "Выбор сделан (ожидание Шага 3)", "⏳ Шаг 2/3: Первичный выбор");
+            
             showPrediction();
         }
         
@@ -311,8 +315,6 @@
                 phoneBlock.style.display = 'block';
                 yandexLink.style.display = 'none';
                 gisLink.style.display = 'none';
-                
-                submitToGoogleForm(chosenRating, chosenClarify, "Без комментария (ожидание ввода)", selectedTable);
             } else {
                 formBlock.style.display = 'none';
                 phoneBlock.style.display = 'none';
@@ -323,17 +325,18 @@
             showStep(3);
         }
         
+        // Этап 2 (Вариант А): Гость нажал на карты. Отправляем ВТОРОЕ уведомление
         function logMapClick(mapName) {
-            submitToGoogleForm(chosenRating, chosenClarify, "Переход на " + mapName, selectedTable);
+            submitToServices(chosenRating, chosenClarify, "Переход на " + mapName, "✅ Шаг 3/3: Действие гостя");
         }
         
+        // Этап 2 (Вариант Б): Гость написал текст жалобы и нажал отправить. Отправляем ВТОРОЕ уведомление
         function sendFinalFeedback() {
             if (!chosenRating || !selectedTable) return;
             
-            const commentText = document.getElementById('guest-text').value || "Без текста";
-            submitToGoogleForm(chosenRating, chosenClarify, commentText, selectedTable);
+            const commentText = document.getElementById('guest-text').value || "Без текста комментария";
+            submitToServices(chosenRating, chosenClarify, commentText, "🚨 Шаг 3/3: Финальный отзыв");
             
-            feedbackSent = true;
             document.getElementById('form-container').innerHTML = `
                 <div style='text-align:center; color:#1a1a1a; font-size:14px; padding:10px; font-weight:bold;'>
                     ✔️ Отзыв успешно сохранен!<br>
@@ -342,7 +345,8 @@
             `;
         }
         
-        function submitToGoogleForm(rating, clarify, comment, table) {
+        // Универсальная функция одновременной отправки в Google и Telegram
+        function submitToServices(rating, clarify, comment, stepStatus) {
             // 1. Отправка в Google Форму
             const tempForm = document.createElement('form');
             tempForm.method = "POST";
@@ -353,8 +357,8 @@
             const fields = [
                 { name: FIELD_RATING, val: rating },
                 { name: FIELD_CLARIFY, val: clarify },
-                { name: FIELD_COMMENT, val: comment },
-                { name: FIELD_TABLE, val: table }
+                { name: FIELD_COMMENT, val: comment + " [" + stepStatus + "]" }, // Пометка статуса прямо в таблице
+                { name: FIELD_TABLE, val: selectedTable }
             ];
             
             fields.forEach(f => {
@@ -372,22 +376,21 @@
                 if (tempForm.parentNode) document.body.removeChild(tempForm);
             }, 300);
 
-            // 2. Сборка сообщения для Telegram
-            let emojiHeader = "⭐️ Новый отзыв InTempo!";
+            // 2. Отправка в Telegram
+            let emojiHeader = "📩 Статус отзыва InTempo";
             if(rating === "Ужасно") emojiHeader = "🚨 КРИТИЧЕСКИЙ ОТЗЫВ!";
             if(rating === "Восхитительно") emojiHeader = "🔥 ПОТРЯСАЮЩИЙ ОТЗЫВ!";
 
             const textMessage = 
-                emojiHeader + "\n\n" +
-                "🍽 Стол: №" + table + "\n" +
+                emojiHeader + " (" + stepStatus + ")\n\n" +
+                "🍽 Стол: №" + selectedTable + "\n" +
                 "🎭 Вердикт: " + rating + "\n" +
                 "🎯 Детали: " + clarify + "\n" +
-                "📝 Комментарий: " + comment;
+                "📝 Действие/Текст: " + comment;
 
             const encodedText = encodeURIComponent(textMessage);
             const tgImgUrl = "https://api.telegram.org/bot" + TELEGRAM_TOKEN + "/sendMessage?chat_id=" + TELEGRAM_CHAT_ID + "&text=" + encodedText;
 
-            // Сверхнадёжная отправка запроса через Image API для полного обхода ограничений CORS браузера
             const trigger = new Image();
             trigger.src = tgImgUrl;
         }
